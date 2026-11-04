@@ -56,7 +56,7 @@
     <string name="preferences_about_title">About Anomaly</string>
     <string name="preferences_about_summary">Version, credits and license</string>
     <string name="about_title">About Anomaly</string>
-    <string name="about_message">Anomaly 1.0.0\n\nA personal PlayStation Remote Play client for Android with third-party controller support.\n\nBuilt on the open-source Chiaki-ng project, licensed under AGPL-3.0 with an OpenSSL exception. Source code: https://github.com/shahittoshariear-spec/anomaly\n\nPlayStation, PS5 and PSN are trademarks of Sony Interactive Entertainment. This app is not affiliated with or endorsed by Sony.</string>
+    <string name="about_message">Anomaly 1.0.1\n\nA personal PlayStation Remote Play client for Android with third-party controller support.\n\nBuilt on the open-source Chiaki-ng project, licensed under AGPL-3.0 with an OpenSSL exception. Source code: https://github.com/shahittoshariear-spec/anomaly\n\nPlayStation, PS5 and PSN are trademarks of Sony Interactive Entertainment. This app is not affiliated with or endorsed by Sony.</string>
     <string name="hint_regist_pin">PIN</string>
     <string name="action_regist">Register</string>
     <string name="entered_host_invalid">Please enter a valid host name</string>

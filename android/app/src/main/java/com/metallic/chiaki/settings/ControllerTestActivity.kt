@@ -96,7 +96,7 @@ class ControllerTestActivity: AppCompatActivity()
 		{
 			val device = InputDevice.getDevice(id) ?: continue
 			val isGamepad = device.sources and InputDevice.SOURCE_CLASS_JOYSTICK != 0 ||
-					device.sources and InputDevice.SOURCE_GAMEPAD != 0
+					device.sources and InputDevice.SOURCE_GAMEPAD == InputDevice.SOURCE_GAMEPAD
 			if(!isGamepad)
 				continue
 

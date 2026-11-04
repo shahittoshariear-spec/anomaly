@@ -6,8 +6,8 @@ is available at <https://github.com/streetpea/chiaki-ng>.
 
 ## Branding
 
-- `android/app/build.gradle`: application id `app.anomaly.remoteplay`, version 1.0.0,
-  arm64-v8a, local signing.
+- `android/app/build.gradle`: application id `app.anomaly.remoteplay`, version 1.0.1,
+  arm64-v8a and armeabi-v7a, local signing.
 - `android/settings.gradle`: project name `Anomaly`.
 - `android/app/src/main/res/values/strings.xml`: app name and main title.
 - `android/app/src/main/res/values/colors.xml`: dark/cyan theme matching the icon.
@@ -15,6 +15,19 @@ is available at <https://github.com/streetpea/chiaki-ng>.
 - File provider authority, log file prefix and exported-settings filename renamed to
   Anomaly.
 - Added an **About Anomaly** entry with version, credits and license information.
+
+## 1.0.1 crash and layout fixes
+
+- `android/app/src/main/res/layout/activity_main.xml`: use fully-qualified class names for
+  the two CoordinatorLayout behaviors. The previous `.main.*` names resolved against the
+  application id (`app.anomaly.remoteplay`) instead of the code namespace
+  (`com.metallic.chiaki`), causing a `ClassNotFoundException` while inflating the main
+  activity.
+- Added `android:fitsSystemWindows="true"` to the main, registration, manual console,
+  registration progress, settings, PSN login and controller test layouts so Android 15
+  edge-to-edge does not place toolbars under the status bar.
+- `settings/ControllerTestActivity.kt`: require the full `SOURCE_GAMEPAD` flag instead of
+  any matching source bit, so touchscreens are not listed as gamepads.
 
 ## New features
 

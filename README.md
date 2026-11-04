@@ -10,7 +10,7 @@ sign-in flow and a controller diagnostic screen added.
 
 - **Download the APK:** [latest release](https://github.com/shahittoshariear-spec/anomaly/releases/latest)
 - **Package:** `app.anomaly.remoteplay`
-- **Version:** 1.0.0
+- **Version:** 1.0.1
 - **Android:** 7.0+ (API 24)
 - **ABIs:** arm64-v8a, armeabi-v7a
 
@@ -36,13 +36,13 @@ sign-in flow and a controller diagnostic screen added.
 
 ## Install
 
-Download `Anomaly-1.0.0.apk` from the [latest release](https://github.com/shahittoshariear-spec/anomaly/releases/latest)
+Download `Anomaly-1.0.1.apk` from the [latest release](https://github.com/shahittoshariear-spec/anomaly/releases/latest)
 and open it on the phone. Allow installation from the browser/file manager when prompted.
 
 Or with ADB:
 
 ```sh
-adb install -r Anomaly-1.0.0.apk
+adb install -r Anomaly-1.0.1.apk
 ```
 
 ## Set up the PS5
