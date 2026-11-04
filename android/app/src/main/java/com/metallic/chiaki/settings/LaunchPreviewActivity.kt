@@ -3,14 +3,14 @@
 package com.metallic.chiaki.settings
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.metallic.chiaki.common.ThemedActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.metallic.chiaki.stream.LaunchAnimationView
 
 /** Lets the user preview the Remote Play entry animation from Settings. */
-class LaunchPreviewActivity: AppCompatActivity()
+class LaunchPreviewActivity: ThemedActivity()
 {
 	override fun onCreate(savedInstanceState: Bundle?)
 	{

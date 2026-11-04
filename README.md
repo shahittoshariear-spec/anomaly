@@ -10,7 +10,7 @@ sign-in flow and a controller diagnostic screen added.
 
 - **Download the APK:** [latest release](https://github.com/shahittoshariear-spec/anomaly/releases/latest)
 - **Package:** `app.anomaly.remoteplay`
-- **Version:** 1.1.0
+- **Version:** 1.2.0
 - **Android:** 7.0+ (API 24)
 - **ABIs:** arm64-v8a, armeabi-v7a
 
@@ -19,11 +19,16 @@ sign-in flow and a controller diagnostic screen added.
 
 ## Features
 
+- Seven color themes: Electric Violet (default), Anomaly Cyan, Graphite, Emerald, Rust,
+  Honey and Lapiz
+- Stop Remote Play with the back gesture; the session shuts down cleanly with a brief toast
+- Fullscreen toggle in the stream overlay and in Settings
 - Configurable virtual controls: always show, hide when a controller is connected,
   always hide, or ask at the start of each session
 - Animated Anomaly logo transition when a Remote Play session opens
 - Clean console sign-in success screen that returns home automatically
 - Modern dark UI with rounded console cards and a proper empty state
+- Battery-conscious defaults: motion sensors opt-in, 50 Hz sampling when enabled
 - PS5 and PS4 Remote Play on the local network
 - Any standard Android HID gamepad, including Xbox-style pads and the GameSir X5 Lite
 - In-app PSN sign-in that fills the PSN Account ID during console registration
@@ -41,13 +46,13 @@ sign-in flow and a controller diagnostic screen added.
 
 ## Install
 
-Download `Anomaly-1.1.0.apk` from the [latest release](https://github.com/shahittoshariear-spec/anomaly/releases/latest)
+Download `Anomaly-1.2.0.apk` from the [latest release](https://github.com/shahittoshariear-spec/anomaly/releases/latest)
 and open it on the phone. Allow installation from the browser/file manager when prompted.
 
 Or with ADB:
 
 ```sh
-adb install -r Anomaly-1.1.0.apk
+adb install -r Anomaly-1.2.0.apk
 ```
 
 ## Set up the PS5

@@ -28,6 +28,7 @@ class DataStore(val preferences: Preferences): PreferenceDataStore()
 		preferences.rumbleEnabledKey -> preferences.rumbleEnabled
 		preferences.motionEnabledKey -> preferences.motionEnabled
 		preferences.buttonHapticEnabledKey -> preferences.buttonHapticEnabled
+		preferences.fullscreenKey -> preferences.fullscreen
 		else -> defValue
 	}
 
@@ -40,6 +41,7 @@ class DataStore(val preferences: Preferences): PreferenceDataStore()
 			preferences.rumbleEnabledKey -> preferences.rumbleEnabled = value
 			preferences.motionEnabledKey -> preferences.motionEnabled = value
 			preferences.buttonHapticEnabledKey -> preferences.buttonHapticEnabled = value
+			preferences.fullscreenKey -> preferences.fullscreen = value
 		}
 	}
 
@@ -50,6 +52,7 @@ class DataStore(val preferences: Preferences): PreferenceDataStore()
 		preferences.bitrateKey -> preferences.bitrate?.toString() ?: ""
 		preferences.codecKey -> preferences.codec.value
 		preferences.virtualControlsModeKey -> preferences.virtualControlsMode.value
+		preferences.themeKey -> preferences.theme.value
 		else -> defValue
 	}
 
@@ -75,6 +78,8 @@ class DataStore(val preferences: Preferences): PreferenceDataStore()
 			}
 			preferences.virtualControlsModeKey ->
 				preferences.virtualControlsMode = Preferences.VirtualControlsMode.fromValue(value)
+			preferences.themeKey ->
+				preferences.theme = Preferences.Theme.fromValue(value)
 		}
 	}
 }
@@ -131,6 +136,15 @@ class SettingsFragment: PreferenceFragmentCompat(), TitleFragment
 		preferenceScreen.findPreference<ListPreference>(getString(R.string.preferences_virtual_controls_mode_key))?.let {
 			it.entryValues = Preferences.VirtualControlsMode.all.map { mode -> mode.value }.toTypedArray()
 			it.entries = Preferences.VirtualControlsMode.all.map { mode -> getString(mode.title) }.toTypedArray()
+		}
+
+		preferenceScreen.findPreference<ListPreference>(getString(R.string.preferences_theme_key))?.let {
+			it.entryValues = Preferences.Theme.all.map { theme -> theme.value }.toTypedArray()
+			it.entries = Preferences.Theme.all.map { theme -> getString(theme.title) }.toTypedArray()
+			it.setOnPreferenceChangeListener { _, _ ->
+				view?.post { activity?.recreate() }
+				true
+			}
 		}
 
 		val registeredHostsPreference = preferenceScreen.findPreference<Preference>("registered_hosts")

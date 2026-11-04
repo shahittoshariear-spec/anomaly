@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.util.Base64
 import android.view.View
 import android.view.Window
-import androidx.appcompat.app.AppCompatActivity
+import com.metallic.chiaki.common.ThemedActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.metallic.chiaki.R
@@ -18,7 +18,7 @@ import com.metallic.chiaki.lib.RegistInfo
 import com.metallic.chiaki.lib.Target
 import java.lang.IllegalArgumentException
 
-class RegistActivity: AppCompatActivity(), RevealActivity
+class RegistActivity: ThemedActivity(), RevealActivity
 {
 	companion object
 	{

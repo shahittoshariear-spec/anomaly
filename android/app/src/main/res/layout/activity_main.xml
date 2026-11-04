@@ -106,7 +106,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@string/action_register"
                 android:textStyle="bold"
-                app:rippleColor="@color/floating_action_button_speed_dial_tint"
+                app:rippleColor="?attr/colorAccent"
                 app:cornerRadius="8dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -133,7 +133,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@string/action_add_manual"
                 android:textStyle="bold"
-                app:rippleColor="@color/floating_action_button_speed_dial_tint"
+                app:rippleColor="?attr/colorAccent"
                 app:cornerRadius="8dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -161,19 +161,19 @@
         android:id="@+id/appBarLayout"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:background="@color/background"
+        android:background="?android:attr/colorBackground"
         app:elevation="0dp">
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_height="?attr/actionBarSize"
             android:layout_width="match_parent"
-            android:background="@color/background"
+            android:background="?android:attr/colorBackground"
             app:title="@string/title_main"
             app:subtitle="@string/title_subtitle"
-            app:titleTextColor="@color/on_surface"
-            app:subtitleTextColor="@color/on_surface_variant"
+            app:titleTextColor="?attr/colorOnSurface"
+            app:subtitleTextColor="?attr/colorOnSurfaceVariant"
             app:layout_scrollFlags="scroll|enterAlways"
-            android:theme="@style/AppTheme.Toolbar" />
+ />
     </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

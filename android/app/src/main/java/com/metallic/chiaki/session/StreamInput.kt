@@ -12,6 +12,12 @@ import com.metallic.chiaki.lib.ControllerState
 
 class StreamInput(val context: Context, val preferences: Preferences)
 {
+	companion object
+	{
+		// 50 Hz is plenty for controller motion and is much easier on battery and thermals
+		// than the old 250 Hz sampling rate.
+		private const val SENSOR_SAMPLING_PERIOD_US = 20000
+	}
 	var controllerStateChangedCallback: ((ControllerState) -> Unit)? = null
 
 	val controllerState: ControllerState get()
@@ -90,7 +96,7 @@ class StreamInput(val context: Context, val preferences: Preferences)
 		@OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
 		fun onResume()
 		{
-			val samplingPeriodUs = 4000
+			val samplingPeriodUs = SENSOR_SAMPLING_PERIOD_US
 			val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 			listOfNotNull(
 				sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),

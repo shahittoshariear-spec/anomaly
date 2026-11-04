@@ -63,6 +63,23 @@ class Preferences(context: Context)
 		}
 	}
 
+	enum class Theme(val value: String, @StringRes val title: Int)
+	{
+		ANOMALY("anomaly", R.string.theme_anomaly),
+		ELECTRIC_VIOLET("electric_violet", R.string.theme_electric_violet),
+		GRAPHITE("graphite", R.string.theme_graphite),
+		EMERALD("emerald", R.string.theme_emerald),
+		RUST("rust", R.string.theme_rust),
+		HONEY("honey", R.string.theme_honey),
+		LAPIZ("lapiz", R.string.theme_lapiz);
+
+		companion object
+		{
+			val all = values()
+			fun fromValue(value: String?) = all.firstOrNull { it.value == value } ?: ELECTRIC_VIOLET
+		}
+	}
+
 	private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 	private val sharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
 		when(key)
@@ -95,6 +112,16 @@ class Preferences(context: Context)
 		}
 		set(value) { sharedPreferences.edit().putString(virtualControlsModeKey, value.value).apply() }
 
+	val themeKey get() = resources.getString(R.string.preferences_theme_key)
+	var theme: Theme
+		get() = Theme.fromValue(sharedPreferences.getString(themeKey, null))
+		set(value) { sharedPreferences.edit().putString(themeKey, value.value).apply() }
+
+	val fullscreenKey get() = resources.getString(R.string.preferences_fullscreen_key)
+	var fullscreen
+		get() = sharedPreferences.getBoolean(fullscreenKey, true)
+		set(value) { sharedPreferences.edit().putBoolean(fullscreenKey, value).apply() }
+
 	val touchpadOnlyEnabledKey get() = resources.getString(R.string.preferences_touchpad_only_enabled_key)
 	var touchpadOnlyEnabled
 		get() = sharedPreferences.getBoolean(touchpadOnlyEnabledKey, false)
@@ -107,7 +134,7 @@ class Preferences(context: Context)
 
 	val motionEnabledKey get() = resources.getString(R.string.preferences_motion_enabled_key)
 	var motionEnabled
-		get() = sharedPreferences.getBoolean(motionEnabledKey, true)
+		get() = sharedPreferences.getBoolean(motionEnabledKey, false)
 		set(value) { sharedPreferences.edit().putBoolean(motionEnabledKey, value).apply() }
 
 	val buttonHapticEnabledKey get() = resources.getString(R.string.preferences_button_haptic_enabled_key)

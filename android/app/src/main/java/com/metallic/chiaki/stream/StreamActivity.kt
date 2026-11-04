@@ -10,8 +10,10 @@ import android.hardware.input.InputManager
 import android.os.*
 import android.view.*
 import android.widget.EditText
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import com.metallic.chiaki.common.ThemedActivity
 import androidx.core.content.IntentCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.core.view.ViewCompat
@@ -43,7 +45,7 @@ private object StreamQuitDialog: DialogContents()
 private object CreateErrorDialog: DialogContents()
 private object PinRequestDialog: DialogContents()
 
-class StreamActivity : AppCompatActivity()
+class StreamActivity : ThemedActivity()
 {
 	companion object
 	{
@@ -60,6 +62,7 @@ class StreamActivity : AppCompatActivity()
 	private var updatingControlsSwitch = false
 	private var controlsChoiceOverridden = false
 	private var sessionPaused = false
+	private var stopping = false
 
 	private val controlsJobs = mutableMapOf<Fragment, Job>()
 
@@ -91,6 +94,9 @@ class StreamActivity : AppCompatActivity()
 		binding = ActivityStreamBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 		binding.launchAnimation.start { binding.launchAnimation.visibility = View.GONE }
+		binding.fullscreenButton.setOnClickListener { toggleFullscreen() }
+		updateFullscreenToggle()
+		onBackPressedDispatcher.addCallback(this) { stopSessionAndFinish() }
 
 		supportFragmentManager.fragments.forEach {
 			if(it is TouchControlsFragment)
@@ -143,6 +149,8 @@ class StreamActivity : AppCompatActivity()
 			showOverlay()
 		}
 
+		binding.surfaceView.setOnClickListener { showOverlay() }
+
 		//viewModel.session.attachToTextureView(textureView)
 		viewModel.session.attachToSurfaceView(binding.surfaceView)
 		viewModel.session.state.observe(this, Observer { this.stateChanged(it) })
@@ -189,7 +197,7 @@ class StreamActivity : AppCompatActivity()
 		super.onResume()
 		sessionPaused = false
 		inputManager.registerInputDeviceListener(inputDeviceListener, null)
-		hideSystemUI()
+		applyFullscreen()
 		viewModel.session.resume()
 	}
 
@@ -258,10 +266,15 @@ class StreamActivity : AppCompatActivity()
 		viewModel.session.resume()
 	}
 
-	private val hideSystemUIRunnable = Runnable { hideSystemUI() }
+	private val hideSystemUIRunnable = Runnable {
+		hideOverlay()
+		if(viewModel.preferences.fullscreen)
+			insetsController.hide(WindowInsetsCompat.Type.systemBars())
+	}
 
 	private fun showOverlay()
 	{
+		binding.overlay.animate().cancel()
 		binding.overlay.isVisible = true
 		binding.overlay.animate()
 			.alpha(1.0f)
@@ -278,6 +291,7 @@ class StreamActivity : AppCompatActivity()
 
 	private fun hideOverlay()
 	{
+		binding.overlay.animate().cancel()
 		binding.overlay.animate()
 			.alpha(0.0f)
 			.setListener(object: AnimatorListenerAdapter()
@@ -293,12 +307,43 @@ class StreamActivity : AppCompatActivity()
 	{
 		super.onWindowFocusChanged(hasFocus)
 		if(hasFocus)
-			hideSystemUI()
+			applyFullscreen()
 	}
 
-	private fun hideSystemUI()
+	private fun applyFullscreen()
 	{
-		insetsController.hide(WindowInsetsCompat.Type.systemBars())
+		if(viewModel.preferences.fullscreen)
+			insetsController.hide(WindowInsetsCompat.Type.systemBars())
+		else
+			insetsController.show(WindowInsetsCompat.Type.systemBars())
+		updateFullscreenToggle()
+	}
+
+	private fun toggleFullscreen()
+	{
+		viewModel.preferences.fullscreen = !viewModel.preferences.fullscreen
+		applyFullscreen()
+		showOverlay()
+	}
+
+	private fun updateFullscreenToggle()
+	{
+		val fullscreen = viewModel.preferences.fullscreen
+		binding.fullscreenButton.setImageResource(
+			if(fullscreen) R.drawable.ic_fullscreen_exit else R.drawable.ic_fullscreen)
+		binding.fullscreenButton.contentDescription = getString(
+			if(fullscreen) R.string.stream_fullscreen_exit else R.string.stream_fullscreen_enter)
+	}
+
+	private fun stopSessionAndFinish()
+	{
+		if(stopping)
+			return
+		stopping = true
+		sessionPaused = true
+		viewModel.session.shutdown()
+		Toast.makeText(this, R.string.stream_stopped, Toast.LENGTH_SHORT).show()
+		finish()
 	}
 
 	private var dialogContents: DialogContents? = null

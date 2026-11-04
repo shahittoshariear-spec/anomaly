@@ -40,13 +40,13 @@
     </style>
 
     <style name="AppTheme.Toolbar" parent="AppTheme">
-        <item name="android:textColorSecondary">#fff</item>
+        <item name="android:textColorSecondary">?attr/colorOnSurfaceVariant</item>
     </style>
 
     <style name="AppTheme.FloatingActionButtonSpeedDial">
-        <item name="tint">@color/floating_action_button_speed_dial_tint</item>
-        <item name="android:backgroundTint">@color/floating_action_button_speed_dial_background</item>
-        <item name="android:textColor">@color/floating_action_button_speed_dial_tint</item>
+        <item name="tint">?attr/colorOnSurface</item>
+        <item name="android:backgroundTint">?attr/colorSurface</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <style name="AppTheme.AlertDialog" parent="Theme.MaterialComponents.Dialog.Alert">
@@ -139,5 +139,202 @@
         <item name="colorAccent">@color/accent</item>
         <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog</item>
         <item name="android:windowBackground">@color/stream_background</item>
+    </style>
+
+    <!-- Theme overlays selected in Settings. -->
+    <style name="ThemeOverlay.Anomaly.Cyan" parent="">
+        <item name="colorPrimary">#0B1117</item>
+        <item name="colorPrimaryDark">#05080B</item>
+        <item name="colorPrimaryVariant">#22323E</item>
+        <item name="colorSecondary">#00E5FF</item>
+        <item name="colorSecondaryVariant">#00B8D4</item>
+        <item name="colorAccent">#00E5FF</item>
+        <item name="android:colorAccent">#00E5FF</item>
+        <item name="colorOnPrimary">#E6F1F5</item>
+        <item name="colorOnSecondary">#05080B</item>
+        <item name="colorSurface">#0E171F</item>
+        <item name="colorOnSurface">#E6F1F5</item>
+        <item name="colorOnSurfaceVariant">#9FB3BE</item>
+        <item name="colorOutline">#22323E</item>
+        <item name="colorPrimarySurface">#0E171F</item>
+        <item name="colorControlNormal">#00E5FF</item>
+        <item name="android:colorControlActivated">#00E5FF</item>
+        <item name="android:colorControlHighlight">#3300E5FF</item>
+        <item name="android:colorBackground">#05080B</item>
+        <item name="android:windowBackground">#05080B</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">#05080B</item>
+        <item name="android:textColorPrimary">#E6F1F5</item>
+        <item name="android:textColorSecondary">#9FB3BE</item>
+        <item name="android:textColorHint">#9FB3BE</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="ThemeOverlay.Anomaly.ElectricViolet" parent="">
+        <item name="colorPrimary">#1E1433</item>
+        <item name="colorPrimaryDark">#090613</item>
+        <item name="colorPrimaryVariant">#2E2148</item>
+        <item name="colorSecondary">#B388FF</item>
+        <item name="colorSecondaryVariant">#7C4DFF</item>
+        <item name="colorAccent">#B388FF</item>
+        <item name="android:colorAccent">#B388FF</item>
+        <item name="colorOnPrimary">#EDE7F6</item>
+        <item name="colorOnSecondary">#0B0710</item>
+        <item name="colorSurface">#14101F</item>
+        <item name="colorOnSurface">#EDE7F6</item>
+        <item name="colorOnSurfaceVariant">#B9A8D9</item>
+        <item name="colorOutline">#33264D</item>
+        <item name="colorPrimarySurface">#14101F</item>
+        <item name="colorControlNormal">#B388FF</item>
+        <item name="android:colorControlActivated">#B388FF</item>
+        <item name="android:colorControlHighlight">#33B388FF</item>
+        <item name="android:colorBackground">#090613</item>
+        <item name="android:windowBackground">#090613</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">#090613</item>
+        <item name="android:textColorPrimary">#EDE7F6</item>
+        <item name="android:textColorSecondary">#B9A8D9</item>
+        <item name="android:textColorHint">#B9A8D9</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="ThemeOverlay.Anomaly.Graphite" parent="">
+        <item name="colorPrimary">#1F2225</item>
+        <item name="colorPrimaryDark">#08090A</item>
+        <item name="colorPrimaryVariant">#2A2F33</item>
+        <item name="colorSecondary">#CFD8DC</item>
+        <item name="colorSecondaryVariant">#90A4AE</item>
+        <item name="colorAccent">#CFD8DC</item>
+        <item name="android:colorAccent">#CFD8DC</item>
+        <item name="colorOnPrimary">#ECEFF1</item>
+        <item name="colorOnSecondary">#0A0B0C</item>
+        <item name="colorSurface">#16181A</item>
+        <item name="colorOnSurface">#ECEFF1</item>
+        <item name="colorOnSurfaceVariant">#A7B0B5</item>
+        <item name="colorOutline">#2A2F33</item>
+        <item name="colorPrimarySurface">#16181A</item>
+        <item name="colorControlNormal">#CFD8DC</item>
+        <item name="android:colorControlActivated">#CFD8DC</item>
+        <item name="android:colorControlHighlight">#33CFD8DC</item>
+        <item name="android:colorBackground">#08090A</item>
+        <item name="android:windowBackground">#08090A</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">#08090A</item>
+        <item name="android:textColorPrimary">#ECEFF1</item>
+        <item name="android:textColorSecondary">#A7B0B5</item>
+        <item name="android:textColorHint">#A7B0B5</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="ThemeOverlay.Anomaly.Emerald" parent="">
+        <item name="colorPrimary">#0F2A1E</item>
+        <item name="colorPrimaryDark">#04100B</item>
+        <item name="colorPrimaryVariant">#1D3A2C</item>
+        <item name="colorSecondary">#00E676</item>
+        <item name="colorSecondaryVariant">#00C853</item>
+        <item name="colorAccent">#00E676</item>
+        <item name="android:colorAccent">#00E676</item>
+        <item name="colorOnPrimary">#E0F2E9</item>
+        <item name="colorOnSecondary">#04100B</item>
+        <item name="colorSurface">#0B1F16</item>
+        <item name="colorOnSurface">#E0F2E9</item>
+        <item name="colorOnSurfaceVariant">#9CC3AF</item>
+        <item name="colorOutline">#1D3A2C</item>
+        <item name="colorPrimarySurface">#0B1F16</item>
+        <item name="colorControlNormal">#00E676</item>
+        <item name="android:colorControlActivated">#00E676</item>
+        <item name="android:colorControlHighlight">#3300E676</item>
+        <item name="android:colorBackground">#04100B</item>
+        <item name="android:windowBackground">#04100B</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">#04100B</item>
+        <item name="android:textColorPrimary">#E0F2E9</item>
+        <item name="android:textColorSecondary">#9CC3AF</item>
+        <item name="android:textColorHint">#9CC3AF</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="ThemeOverlay.Anomaly.Rust" parent="">
+        <item name="colorPrimary">#2E170C</item>
+        <item name="colorPrimaryDark">#120804</item>
+        <item name="colorPrimaryVariant">#432417</item>
+        <item name="colorSecondary">#FF7043</item>
+        <item name="colorSecondaryVariant">#F4511E</item>
+        <item name="colorAccent">#FF7043</item>
+        <item name="android:colorAccent">#FF7043</item>
+        <item name="colorOnPrimary">#F6E6DD</item>
+        <item name="colorOnSecondary">#120804</item>
+        <item name="colorSurface">#24120A</item>
+        <item name="colorOnSurface">#F6E6DD</item>
+        <item name="colorOnSurfaceVariant">#C9A493</item>
+        <item name="colorOutline">#432417</item>
+        <item name="colorPrimarySurface">#24120A</item>
+        <item name="colorControlNormal">#FF7043</item>
+        <item name="android:colorControlActivated">#FF7043</item>
+        <item name="android:colorControlHighlight">#33FF7043</item>
+        <item name="android:colorBackground">#120804</item>
+        <item name="android:windowBackground">#120804</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">#120804</item>
+        <item name="android:textColorPrimary">#F6E6DD</item>
+        <item name="android:textColorSecondary">#C9A493</item>
+        <item name="android:textColorHint">#C9A493</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="ThemeOverlay.Anomaly.Honey" parent="">
+        <item name="colorPrimary">#2C250D</item>
+        <item name="colorPrimaryDark">#121006</item>
+        <item name="colorPrimaryVariant">#403615</item>
+        <item name="colorSecondary">#FFC107</item>
+        <item name="colorSecondaryVariant">#FFB300</item>
+        <item name="colorAccent">#FFC107</item>
+        <item name="android:colorAccent">#FFC107</item>
+        <item name="colorOnPrimary">#F7F0D4</item>
+        <item name="colorOnSecondary">#121006</item>
+        <item name="colorSurface">#221D0A</item>
+        <item name="colorOnSurface">#F7F0D4</item>
+        <item name="colorOnSurfaceVariant">#C9B77B</item>
+        <item name="colorOutline">#403615</item>
+        <item name="colorPrimarySurface">#221D0A</item>
+        <item name="colorControlNormal">#FFC107</item>
+        <item name="android:colorControlActivated">#FFC107</item>
+        <item name="android:colorControlHighlight">#33FFC107</item>
+        <item name="android:colorBackground">#121006</item>
+        <item name="android:windowBackground">#121006</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">#121006</item>
+        <item name="android:textColorPrimary">#F7F0D4</item>
+        <item name="android:textColorSecondary">#C9B77B</item>
+        <item name="android:textColorHint">#C9B77B</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="ThemeOverlay.Anomaly.Lapiz" parent="">
+        <item name="colorPrimary">#10203A</item>
+        <item name="colorPrimaryDark">#050B16</item>
+        <item name="colorPrimaryVariant">#1C2E48</item>
+        <item name="colorSecondary">#2979FF</item>
+        <item name="colorSecondaryVariant">#1565C0</item>
+        <item name="colorAccent">#2979FF</item>
+        <item name="android:colorAccent">#2979FF</item>
+        <item name="colorOnPrimary">#E3EDF9</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorSurface">#0C1526</item>
+        <item name="colorOnSurface">#E3EDF9</item>
+        <item name="colorOnSurfaceVariant">#9FB4CE</item>
+        <item name="colorOutline">#1C2E48</item>
+        <item name="colorPrimarySurface">#0C1526</item>
+        <item name="colorControlNormal">#2979FF</item>
+        <item name="android:colorControlActivated">#2979FF</item>
+        <item name="android:colorControlHighlight">#332979FF</item>
+        <item name="android:colorBackground">#050B16</item>
+        <item name="android:windowBackground">#050B16</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">#050B16</item>
+        <item name="android:textColorPrimary">#E3EDF9</item>
+        <item name="android:textColorSecondary">#9FB4CE</item>
+        <item name="android:textColorHint">#9FB4CE</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

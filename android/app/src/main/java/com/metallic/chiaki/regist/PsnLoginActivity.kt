@@ -12,7 +12,7 @@ import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.appcompat.app.AppCompatActivity
+import com.metallic.chiaki.common.ThemedActivity
 import com.metallic.chiaki.R
 import com.metallic.chiaki.databinding.ActivityPsnLoginBinding
 import org.json.JSONObject
@@ -29,7 +29,7 @@ import java.security.SecureRandom
  * exchanged for a token, which is used to look up the numeric PSN user id. That id
  * is converted to the 8-byte little-endian account id Chiaki expects.
  */
-class PsnLoginActivity: AppCompatActivity()
+class PsnLoginActivity: ThemedActivity()
 {
 	companion object
 	{
@@ -246,9 +246,12 @@ class PsnLoginActivity: AppCompatActivity()
 	override fun onDestroy()
 	{
 		cancelled = true
-		binding.webView.stopLoading()
-		binding.webView.loadUrl("about:blank")
-		binding.webView.destroy()
+		if(::binding.isInitialized)
+		{
+			binding.webView.stopLoading()
+			binding.webView.loadUrl("about:blank")
+			binding.webView.destroy()
+		}
 		super.onDestroy()
 	}
 }

@@ -6,7 +6,7 @@ is available at <https://github.com/streetpea/chiaki-ng>.
 
 ## Branding
 
-- `android/app/build.gradle`: application id `app.anomaly.remoteplay`, version 1.1.0,
+- `android/app/build.gradle`: application id `app.anomaly.remoteplay`, version 1.2.0,
   arm64-v8a and armeabi-v7a, local signing.
 - `android/settings.gradle`: project name `Anomaly`.
 - `android/app/src/main/res/values/strings.xml`: app name and main title.
@@ -28,6 +28,27 @@ is available at <https://github.com/streetpea/chiaki-ng>.
   edge-to-edge does not place toolbars under the status bar.
 - `settings/ControllerTestActivity.kt`: require the full `SOURCE_GAMEPAD` flag instead of
   any matching source bit, so touchscreens are not listed as gamepads.
+
+## 1.2.0 features and fixes
+
+- Seven selectable themes (`common/Preferences.Theme`, `common/ThemeManager.kt`,
+  `common/ThemedActivity.kt`, `ThemeOverlay.Anomaly.*` styles): Electric Violet (default),
+  Anomaly Cyan, Graphite, Emerald, Rust, Honey and Lapiz. Activities apply the overlay
+  before `super.onCreate` and recreate if the theme changes in Settings.
+- Stream exit is now the stop action: an `OnBackPressedDispatcher` callback shuts the
+  session down, shows a brief "Remote Play stopped" toast and finishes. No stop button was
+  added to the stream UI.
+- Fullscreen toggle: a Settings switch and an in-stream overlay icon control immersive
+  system bars. Tapping the video surface shows the overlay, so controls remain reachable
+  with fullscreen disabled.
+- Battery/thermal improvements: motion sensors are now opt-in (default off) and sample at
+  50 Hz instead of 250 Hz when enabled; the stream already uses hardware decoding and a
+  SurfaceView, and still stops decoding when the activity pauses.
+- Fixed overlay show/hide animations fighting each other.
+- Fixed the PSN outlined button rendering with the dark primary color instead of the accent.
+- Moved the PSN sign-in button above the Account ID field so it is visible without scrolling.
+- Guarded the PSN WebView teardown if the activity was never fully created.
+- Stopped using a per-toolbar theme context so toolbar colors inherit the selected theme.
 
 ## 1.1.0 features and bug fixes
 

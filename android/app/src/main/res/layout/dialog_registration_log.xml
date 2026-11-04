@@ -8,11 +8,11 @@
         android:id="@+id/logTextView"
         android:layout_width="match_parent"
         android:layout_height="360dp"
-        android:background="@color/surface_variant"
+        android:background="?attr/colorSurface"
         android:fontFamily="monospace"
         android:padding="12dp"
         android:scrollbars="vertical"
-        android:textColor="@color/on_surface"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="12sp" />
 
 </FrameLayout>

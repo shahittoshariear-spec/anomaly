@@ -4,7 +4,7 @@ package com.metallic.chiaki.settings
 
 import android.content.res.Resources
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.metallic.chiaki.common.ThemedActivity
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -16,7 +16,7 @@ interface TitleFragment
 	fun getTitle(resources: Resources): String
 }
 
-class SettingsActivity: AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback
+class SettingsActivity: ThemedActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback
 {
 	private lateinit var binding: ActivitySettingsBinding
 

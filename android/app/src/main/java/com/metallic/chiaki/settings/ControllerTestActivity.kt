@@ -6,14 +6,14 @@ import android.os.Bundle
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
-import androidx.appcompat.app.AppCompatActivity
+import com.metallic.chiaki.common.ThemedActivity
 import com.metallic.chiaki.databinding.ActivityControllerTestBinding
 
 /**
  * Shows how Android reports the connected gamepad. Useful for verifying that a
  * third-party controller's buttons and axes are mapped the way the stream expects.
  */
-class ControllerTestActivity: AppCompatActivity()
+class ControllerTestActivity: ThemedActivity()
 {
 	private lateinit var binding: ActivityControllerTestBinding
 

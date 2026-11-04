@@ -11,7 +11,7 @@ import android.os.Looper
 import android.text.method.ScrollingMovementMethod
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import com.metallic.chiaki.common.ThemedActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.lifecycle.Observer
@@ -24,7 +24,7 @@ import com.metallic.chiaki.common.getDatabase
 import com.metallic.chiaki.databinding.ActivityRegistExecuteBinding
 import com.metallic.chiaki.lib.RegistInfo
 
-class RegistExecuteActivity: AppCompatActivity()
+class RegistExecuteActivity: ThemedActivity()
 {
 	companion object
 	{
