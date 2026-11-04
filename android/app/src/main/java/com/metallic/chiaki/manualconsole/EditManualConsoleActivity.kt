@@ -77,7 +77,7 @@ class EditManualConsoleActivity: ThemedActivity(), RevealActivity
 		if(registeredHost == null)
 			getString(R.string.add_manual_regist_on_connect)
 		else
-			"${registeredHost.serverNickname ?: ""} (${registeredHost.serverMac})"
+			"${registeredHost.customName?.takeIf { it.isNotBlank() } ?: registeredHost.serverNickname ?: ""} (${registeredHost.serverMac})"
 
 	private fun saveHost()
 	{

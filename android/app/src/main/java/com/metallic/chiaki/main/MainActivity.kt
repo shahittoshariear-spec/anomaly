@@ -3,12 +3,18 @@
 package com.metallic.chiaki.main
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
+import androidx.core.graphics.ColorUtils
+import com.google.android.material.color.MaterialColors
 import com.metallic.chiaki.common.ThemedActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +25,7 @@ import com.metallic.chiaki.common.*
 import com.metallic.chiaki.common.ext.putRevealExtra
 import com.metallic.chiaki.common.ext.viewModelFactory
 import com.metallic.chiaki.databinding.ActivityMainBinding
+import com.metallic.chiaki.databinding.DialogRenameHostBinding
 import com.metallic.chiaki.lib.ConnectInfo
 import com.metallic.chiaki.lib.DiscoveryHost
 import com.metallic.chiaki.manualconsole.EditManualConsoleActivity
@@ -42,6 +49,12 @@ class MainActivity : ThemedActivity()
 		setSupportActionBar(binding.toolbar)
 		supportActionBar?.subtitle = getString(R.string.title_subtitle)
 
+		val accent = MaterialColors.getColor(binding.root, androidx.appcompat.R.attr.colorAccent)
+		binding.emptyInfoImageView.background = GradientDrawable().apply {
+			shape = GradientDrawable.OVAL
+			setColor(ColorUtils.setAlphaComponent(accent, 0x16))
+		}
+
 		binding.floatingActionButton.setOnClickListener {
 			expandFloatingActionButton(!binding.floatingActionButton.isExpanded)
 		}
@@ -61,7 +74,7 @@ class MainActivity : ThemedActivity()
 		viewModel = ViewModelProvider(this, viewModelFactory { MainViewModel(getDatabase(this), Preferences(this)) })
 			.get(MainViewModel::class.java)
 
-		val recyclerViewAdapter = DisplayHostRecyclerViewAdapter(this::hostTriggered, this::wakeupHost, this::editHost, this::deleteHost)
+		val recyclerViewAdapter = DisplayHostRecyclerViewAdapter(this::hostTriggered, this::wakeupHost, this::editHost, this::deleteHost, this::renameHost)
 		binding.hostsRecyclerView.adapter = recyclerViewAdapter
 		binding.hostsRecyclerView.layoutManager = LinearLayoutManager(this)
 		viewModel.displayHosts.observe(this, Observer {
@@ -106,6 +119,13 @@ class MainActivity : ThemedActivity()
 	{
 		super.onStop()
 		viewModel.discoveryManager.pause()
+	}
+
+	override fun onPause()
+	{
+		super.onPause()
+		if(binding.floatingActionButton.isExpanded)
+			expandFloatingActionButton(false)
 	}
 
 	private fun setupBackNavigation()
@@ -244,5 +264,34 @@ class MainActivity : ThemedActivity()
 			.setNegativeButton(R.string.action_keep) { _, _ -> }
 			.create()
 			.show()
+	}
+
+	private fun renameHost(host: DisplayHost)
+	{
+		if(!host.canRename)
+			return
+		val dialogBinding = DialogRenameHostBinding.inflate(layoutInflater)
+		val current = host.name.orEmpty()
+		dialogBinding.nameEditText.setText(current)
+		dialogBinding.nameEditText.setSelection(current.length)
+
+		val dialog = MaterialAlertDialogBuilder(this)
+			.setTitle(R.string.rename_console_title)
+			.setView(dialogBinding.root)
+			.setPositiveButton(R.string.action_save) { _, _ ->
+				viewModel.renameHost(host, dialogBinding.nameEditText.text?.toString().orEmpty())
+			}
+			.setNegativeButton(android.R.string.cancel, null)
+			.create()
+
+		dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+		dialog.setOnShowListener {
+			dialogBinding.nameEditText.requestFocus()
+			dialogBinding.nameEditText.post {
+				val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+				inputMethodManager.showSoftInput(dialogBinding.nameEditText, InputMethodManager.SHOW_IMPLICIT)
+			}
+		}
+		dialog.show()
 	}
 }

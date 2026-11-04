@@ -2,22 +2,19 @@
 
 package com.metallic.chiaki.settings
 
-import android.app.Activity
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.text.InputType
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.preference.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.metallic.chiaki.R
 import com.metallic.chiaki.common.Preferences
-import com.metallic.chiaki.common.exportAndShareAllSettings
 import com.metallic.chiaki.common.ext.viewModelFactory
 import com.metallic.chiaki.common.getDatabase
-import com.metallic.chiaki.common.importSettingsFromUri
 
 class DataStore(val preferences: Preferences): PreferenceDataStore()
 {
@@ -86,11 +83,6 @@ class DataStore(val preferences: Preferences): PreferenceDataStore()
 
 class SettingsFragment: PreferenceFragmentCompat(), TitleFragment
 {
-	companion object
-	{
-		private const val PICK_SETTINGS_JSON_REQUEST = 1
-	}
-
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?)
 	{
 		val context = context ?: return
@@ -138,11 +130,10 @@ class SettingsFragment: PreferenceFragmentCompat(), TitleFragment
 			it.entries = Preferences.VirtualControlsMode.all.map { mode -> getString(mode.title) }.toTypedArray()
 		}
 
-		preferenceScreen.findPreference<ListPreference>(getString(R.string.preferences_theme_key))?.let {
-			it.entryValues = Preferences.Theme.all.map { theme -> theme.value }.toTypedArray()
-			it.entries = Preferences.Theme.all.map { theme -> getString(theme.title) }.toTypedArray()
-			it.setOnPreferenceChangeListener { _, _ ->
-				view?.post { activity?.recreate() }
+		preferenceScreen.findPreference<Preference>("theme_picker")?.let {
+			it.summary = getString(preferences.theme.title)
+			it.setOnPreferenceClickListener {
+				startActivity(Intent(requireContext(), ThemePickerActivity::class.java))
 				true
 			}
 		}
@@ -170,36 +161,14 @@ class SettingsFragment: PreferenceFragmentCompat(), TitleFragment
 				.show()
 			true
 		}
-
-		preferenceScreen.findPreference<Preference>(getString(R.string.preferences_export_settings_key))?.setOnPreferenceClickListener { exportSettings(); true }
-		preferenceScreen.findPreference<Preference>(getString(R.string.preferences_import_settings_key))?.setOnPreferenceClickListener { importSettings(); true }
 	}
 
 	override fun getTitle(resources: Resources): String = resources.getString(R.string.title_settings)
 
-	private fun exportSettings()
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?)
 	{
-		val activity = activity ?: return
-		exportAndShareAllSettings(activity, lifecycleScope)
-	}
-
-	private fun importSettings()
-	{
-		val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-			addCategory(Intent.CATEGORY_OPENABLE)
-			type = "application/json"
-		}
-		startActivityForResult(intent, PICK_SETTINGS_JSON_REQUEST)
-	}
-
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-	{
-		if(requestCode == PICK_SETTINGS_JSON_REQUEST && resultCode == Activity.RESULT_OK)
-		{
-			val activity = activity ?: return
-			data?.data?.also {
-				importSettingsFromUri(activity, it, lifecycleScope)
-			}
-		}
+		super.onViewCreated(view, savedInstanceState)
+		listView.isVerticalScrollBarEnabled = false
+		listView.clipToPadding = false
 	}
 }

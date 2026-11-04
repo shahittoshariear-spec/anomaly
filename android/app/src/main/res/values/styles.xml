@@ -20,8 +20,45 @@
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Anomaly.Small</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Anomaly.Medium</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Anomaly.Large</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Anomaly</item>
+        <item name="popupMenuStyle">@style/AppTheme.PopupMenu</item>
+        <item name="android:popupMenuStyle">@style/AppTheme.PopupMenu</item>
 
         <item name="android:windowActivityTransitions">true</item>
+    </style>
+
+    <style name="AppTheme.PopupMenu" parent="Widget.MaterialComponents.PopupMenu">
+        <item name="android:popupBackground">@drawable/bg_popup_menu</item>
+    </style>
+
+    <style name="TextAppearance.Anomaly.ToolbarTitle" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">21sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <style name="TextAppearance.Anomaly.ToolbarSubtitle" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.24</item>
+    </style>
+
+    <style name="PreferenceThemeOverlay.Anomaly" parent="PreferenceThemeOverlay">
+        <item name="android:listSeparatorTextViewStyle">@style/Preference.Anomaly.Separator</item>
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
+        <item name="android:textColorSecondary">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="Preference.Anomaly.Separator" parent="@android:style/TextAppearance.Material.Caption">
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:letterSpacing">0.16</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">6dp</item>
     </style>
 
     <style name="ShapeAppearance.Anomaly.Small" parent="ShapeAppearance.MaterialComponents.SmallComponent">
@@ -62,6 +99,106 @@
 
     <style name="AppTheme.AlertDialog.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/accent</item>
+    </style>
+
+    <!-- Dialogs do not inherit the activity theme overlay, so each palette gets its own
+         dialog theme with the same accent and surfaces. -->
+    <style name="AppTheme.AlertDialog.Cyan" parent="AppTheme.AlertDialog">
+        <item name="colorPrimary">#00E5FF</item>
+        <item name="colorSecondary">#00E5FF</item>
+        <item name="colorAccent">#00E5FF</item>
+        <item name="colorSurface">#0E171F</item>
+        <item name="colorOnSurface">#E6F1F5</item>
+        <item name="colorOnSurfaceVariant">#9FB3BE</item>
+        <item name="colorOutline">#22323E</item>
+        <item name="android:colorAccent">#00E5FF</item>
+        <item name="android:colorControlActivated">#00E5FF</item>
+        <item name="android:textColorPrimary">#E6F1F5</item>
+        <item name="android:textColorSecondary">#9FB3BE</item>
+    </style>
+
+    <style name="AppTheme.AlertDialog.ElectricViolet" parent="AppTheme.AlertDialog">
+        <item name="colorPrimary">#B388FF</item>
+        <item name="colorSecondary">#B388FF</item>
+        <item name="colorAccent">#B388FF</item>
+        <item name="colorSurface">#14101F</item>
+        <item name="colorOnSurface">#EDE7F6</item>
+        <item name="colorOnSurfaceVariant">#B9A8D9</item>
+        <item name="colorOutline">#33264D</item>
+        <item name="android:colorAccent">#B388FF</item>
+        <item name="android:colorControlActivated">#B388FF</item>
+        <item name="android:textColorPrimary">#EDE7F6</item>
+        <item name="android:textColorSecondary">#B9A8D9</item>
+    </style>
+
+    <style name="AppTheme.AlertDialog.Graphite" parent="AppTheme.AlertDialog">
+        <item name="colorPrimary">#CFD8DC</item>
+        <item name="colorSecondary">#CFD8DC</item>
+        <item name="colorAccent">#CFD8DC</item>
+        <item name="colorSurface">#16181A</item>
+        <item name="colorOnSurface">#ECEFF1</item>
+        <item name="colorOnSurfaceVariant">#A7B0B5</item>
+        <item name="colorOutline">#2A2F33</item>
+        <item name="android:colorAccent">#CFD8DC</item>
+        <item name="android:colorControlActivated">#CFD8DC</item>
+        <item name="android:textColorPrimary">#ECEFF1</item>
+        <item name="android:textColorSecondary">#A7B0B5</item>
+    </style>
+
+    <style name="AppTheme.AlertDialog.Emerald" parent="AppTheme.AlertDialog">
+        <item name="colorPrimary">#00E676</item>
+        <item name="colorSecondary">#00E676</item>
+        <item name="colorAccent">#00E676</item>
+        <item name="colorSurface">#0B1F16</item>
+        <item name="colorOnSurface">#E0F2E9</item>
+        <item name="colorOnSurfaceVariant">#9CC3AF</item>
+        <item name="colorOutline">#1D3A2C</item>
+        <item name="android:colorAccent">#00E676</item>
+        <item name="android:colorControlActivated">#00E676</item>
+        <item name="android:textColorPrimary">#E0F2E9</item>
+        <item name="android:textColorSecondary">#9CC3AF</item>
+    </style>
+
+    <style name="AppTheme.AlertDialog.Rust" parent="AppTheme.AlertDialog">
+        <item name="colorPrimary">#FF7043</item>
+        <item name="colorSecondary">#FF7043</item>
+        <item name="colorAccent">#FF7043</item>
+        <item name="colorSurface">#24120A</item>
+        <item name="colorOnSurface">#F6E6DD</item>
+        <item name="colorOnSurfaceVariant">#C9A493</item>
+        <item name="colorOutline">#432417</item>
+        <item name="android:colorAccent">#FF7043</item>
+        <item name="android:colorControlActivated">#FF7043</item>
+        <item name="android:textColorPrimary">#F6E6DD</item>
+        <item name="android:textColorSecondary">#C9A493</item>
+    </style>
+
+    <style name="AppTheme.AlertDialog.Honey" parent="AppTheme.AlertDialog">
+        <item name="colorPrimary">#FFC107</item>
+        <item name="colorSecondary">#FFC107</item>
+        <item name="colorAccent">#FFC107</item>
+        <item name="colorSurface">#221D0A</item>
+        <item name="colorOnSurface">#F7F0D4</item>
+        <item name="colorOnSurfaceVariant">#C9B77B</item>
+        <item name="colorOutline">#403615</item>
+        <item name="android:colorAccent">#FFC107</item>
+        <item name="android:colorControlActivated">#FFC107</item>
+        <item name="android:textColorPrimary">#F7F0D4</item>
+        <item name="android:textColorSecondary">#C9B77B</item>
+    </style>
+
+    <style name="AppTheme.AlertDialog.Lapiz" parent="AppTheme.AlertDialog">
+        <item name="colorPrimary">#2979FF</item>
+        <item name="colorSecondary">#2979FF</item>
+        <item name="colorAccent">#2979FF</item>
+        <item name="colorSurface">#0C1526</item>
+        <item name="colorOnSurface">#E3EDF9</item>
+        <item name="colorOnSurfaceVariant">#9FB4CE</item>
+        <item name="colorOutline">#1C2E48</item>
+        <item name="android:colorAccent">#2979FF</item>
+        <item name="android:colorControlActivated">#2979FF</item>
+        <item name="android:textColorPrimary">#E3EDF9</item>
+        <item name="android:textColorSecondary">#9FB4CE</item>
     </style>
 
     <style name="MageTheme" parent="Theme.MaterialComponents.NoActionBar">
@@ -164,6 +301,7 @@
         <item name="android:windowBackground">#05080B</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">#05080B</item>
+        <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog.Cyan</item>
         <item name="android:textColorPrimary">#E6F1F5</item>
         <item name="android:textColorSecondary">#9FB3BE</item>
         <item name="android:textColorHint">#9FB3BE</item>
@@ -192,6 +330,7 @@
         <item name="android:windowBackground">#090613</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">#090613</item>
+        <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog.ElectricViolet</item>
         <item name="android:textColorPrimary">#EDE7F6</item>
         <item name="android:textColorSecondary">#B9A8D9</item>
         <item name="android:textColorHint">#B9A8D9</item>
@@ -220,6 +359,7 @@
         <item name="android:windowBackground">#08090A</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">#08090A</item>
+        <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog.Graphite</item>
         <item name="android:textColorPrimary">#ECEFF1</item>
         <item name="android:textColorSecondary">#A7B0B5</item>
         <item name="android:textColorHint">#A7B0B5</item>
@@ -248,6 +388,7 @@
         <item name="android:windowBackground">#04100B</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">#04100B</item>
+        <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog.Emerald</item>
         <item name="android:textColorPrimary">#E0F2E9</item>
         <item name="android:textColorSecondary">#9CC3AF</item>
         <item name="android:textColorHint">#9CC3AF</item>
@@ -276,6 +417,7 @@
         <item name="android:windowBackground">#120804</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">#120804</item>
+        <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog.Rust</item>
         <item name="android:textColorPrimary">#F6E6DD</item>
         <item name="android:textColorSecondary">#C9A493</item>
         <item name="android:textColorHint">#C9A493</item>
@@ -304,6 +446,7 @@
         <item name="android:windowBackground">#121006</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">#121006</item>
+        <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog.Honey</item>
         <item name="android:textColorPrimary">#F7F0D4</item>
         <item name="android:textColorSecondary">#C9B77B</item>
         <item name="android:textColorHint">#C9B77B</item>
@@ -332,6 +475,7 @@
         <item name="android:windowBackground">#050B16</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">#050B16</item>
+        <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog.Lapiz</item>
         <item name="android:textColorPrimary">#E3EDF9</item>
         <item name="android:textColorSecondary">#9FB4CE</item>
         <item name="android:textColorHint">#9FB4CE</item>

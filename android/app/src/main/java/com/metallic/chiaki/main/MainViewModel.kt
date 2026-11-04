@@ -53,6 +53,27 @@ class MainViewModel(val database: AppDatabase, val preferences: Preferences): Vi
 		}
 	}
 
+	fun renameHost(host: DisplayHost, name: String)
+	{
+		val customName = name.trim().ifEmpty { null }
+		viewModelScope.launch(Dispatchers.IO) {
+			try {
+				when(host)
+				{
+					is ManualDisplayHost -> {
+						database.manualHostDao().setCustomName(host.manualHost.id, customName)
+						host.registeredHost?.let {
+							database.registeredHostDao().setCustomName(it.id, customName)
+						}
+					}
+					is DiscoveredDisplayHost -> host.registeredHost?.let {
+						database.registeredHostDao().setCustomName(it.id, customName)
+					}
+				}
+			} catch(_: Exception) {}
+		}
+	}
+
 	override fun onCleared()
 	{
 		super.onCleared()

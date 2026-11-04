@@ -2,16 +2,19 @@
 
 package com.metallic.chiaki.main
 
+import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.PopupMenu
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.color.MaterialColors
 import com.metallic.chiaki.R
 import com.metallic.chiaki.common.DiscoveredDisplayHost
 import com.metallic.chiaki.common.DisplayHost
@@ -32,7 +35,8 @@ class DisplayHostRecyclerViewAdapter(
 	val clickCallback: (DisplayHost) -> Unit,
 	val wakeupCallback: (DisplayHost) -> Unit,
 	val editCallback: (DisplayHost) -> Unit,
-	val deleteCallback: (DisplayHost) -> Unit
+	val deleteCallback: (DisplayHost) -> Unit,
+	val renameCallback: (DisplayHost) -> Unit
 ): RecyclerView.Adapter<DisplayHostRecyclerViewAdapter.ViewHolder>()
 {
 	var hosts: List<DisplayHost> = listOf()
@@ -54,6 +58,8 @@ class DisplayHostRecyclerViewAdapter(
 	{
 		val context = holder.itemView.context
 		val host = hosts[position]
+		val accent = MaterialColors.getColor(holder.itemView, androidx.appcompat.R.attr.colorAccent)
+		val density = context.resources.displayMetrics.density
 		holder.binding.also {
 			it.nameTextView.text = host.name?.ifEmpty { context.getString(R.string.manual_console_name) }
 				?: context.getString(R.string.manual_console_name)
@@ -75,7 +81,29 @@ class DisplayHostRecyclerViewAdapter(
 				else
 					""
 			} ?: ""
-			it.discoveredIndicatorLayout.visibility = if(host is DiscoveredDisplayHost) View.VISIBLE else View.GONE
+			it.iconBadge.background = GradientDrawable().apply {
+				cornerRadius = 16f * density
+				setColor(ColorUtils.setAlphaComponent(accent, 0x24))
+				setStroke((1f * density).toInt(), ColorUtils.setAlphaComponent(accent, 0x40))
+			}
+			val discoveredState = (host as? DiscoveredDisplayHost)?.discoveredHost?.state
+			if(discoveredState == DiscoveryHost.State.READY || discoveredState == DiscoveryHost.State.STANDBY)
+			{
+				val ready = discoveredState == DiscoveryHost.State.READY
+				val chipColor = if(ready)
+					accent
+				else
+					MaterialColors.getColor(it.root, com.google.android.material.R.attr.colorOnSurfaceVariant)
+				it.statusTextView.visibility = View.VISIBLE
+				it.statusTextView.setText(if(ready) R.string.console_status_ready else R.string.console_status_standby)
+				it.statusTextView.setTextColor(chipColor)
+				it.statusTextView.background = GradientDrawable().apply {
+					cornerRadius = 100f * density
+					setColor(ColorUtils.setAlphaComponent(chipColor, 0x26))
+				}
+			}
+			else
+				it.statusTextView.visibility = View.GONE
 			it.stateIndicatorImageView.setImageResource(
 				when
 				{
@@ -93,7 +121,7 @@ class DisplayHostRecyclerViewAdapter(
 
 			val canWakeup = host.registeredHost != null
 			val canEditDelete = host is ManualDisplayHost
-			if(canWakeup || canEditDelete)
+			if(canWakeup || canEditDelete || host.canRename)
 			{
 				it.menuButton.isVisible = true
 				it.menuButton.setOnClickListener { _ ->
@@ -102,12 +130,14 @@ class DisplayHostRecyclerViewAdapter(
 					menu.menu.findItem(R.id.action_wakeup).isVisible = canWakeup
 					menu.menu.findItem(R.id.action_edit).isVisible = canEditDelete
 					menu.menu.findItem(R.id.action_delete).isVisible = canEditDelete
+					menu.menu.findItem(R.id.action_rename).isVisible = host.canRename
 					menu.setOnMenuItemClickListener { menuItem ->
 						when(menuItem.itemId)
 						{
 							R.id.action_wakeup -> wakeupCallback(host)
 							R.id.action_edit -> editCallback(host)
 							R.id.action_delete -> deleteCallback(host)
+							R.id.action_rename -> renameCallback(host)
 							else -> return@setOnMenuItemClickListener false
 						}
 						true

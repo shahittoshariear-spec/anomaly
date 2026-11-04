@@ -5,13 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="12dp"
-    android:layout_marginEnd="16dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginBottom="6dp"
     android:clickable="true"
     android:focusable="true"
     app:cardBackgroundColor="?attr/colorSurface"
-    app:cardCornerRadius="20dp"
+    app:cardCornerRadius="24dp"
     app:cardElevation="0dp"
     app:rippleColor="?attr/colorAccent"
     app:strokeColor="?attr/colorOutline"
@@ -22,15 +23,22 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/stateIndicatorImageView"
-            android:layout_width="72dp"
-            android:layout_height="56dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_console_simple"
+        <FrameLayout
+            android:id="@+id/iconBadge"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorAccent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/stateIndicatorImageView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_console_simple"
+                app:tint="?attr/colorAccent" />
+        </FrameLayout>
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/menuButton"
@@ -47,30 +55,30 @@
             android:id="@+id/nameTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="14dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="?attr/colorOnSurface"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/menuButton"
-            app:layout_constraintStart_toEndOf="@id/stateIndicatorImageView"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iconBadge"
+            app:layout_constraintTop_toTopOf="@id/iconBadge"
             tools:text="PlayStation 5" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/hostTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="3dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="?attr/colorOnSurfaceVariant"
-            android:textSize="13sp"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/stateIndicatorImageView"
+            app:layout_constraintStart_toEndOf="@id/iconBadge"
             app:layout_constraintTop_toBottomOf="@id/nameTextView"
             tools:text="Address: 192.168.1.42" />
 
@@ -78,14 +86,14 @@
             android:id="@+id/idTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="14dp"
             android:layout_marginTop="2dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="?attr/colorOnSurfaceVariant"
-            android:textSize="12sp"
+            android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/stateIndicatorImageView"
+            app:layout_constraintStart_toEndOf="@id/iconBadge"
             app:layout_constraintTop_toBottomOf="@id/hostTextView"
             tools:text="ID: C0FFEE1337" />
 
@@ -93,37 +101,35 @@
             android:id="@+id/bottomInfoTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="14dp"
             android:layout_marginTop="6dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/stateIndicatorImageView"
+            app:layout_constraintEnd_toStartOf="@id/statusTextView"
+            app:layout_constraintStart_toEndOf="@id/iconBadge"
             app:layout_constraintTop_toBottomOf="@id/idTextView"
-            tools:text="App: Persona 5\nTitle ID: PPSA01234" />
+            tools:text="App: Persona 5" />
 
-        <FrameLayout
-            android:id="@+id/discoveredIndicatorLayout"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/statusTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_status_chip"
+            android:paddingStart="9dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="9dp"
+            android:paddingBottom="3dp"
+            android:textColor="?attr/colorAccent"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_triangle"
-                app:tint="?attr/colorAccent" />
-
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_discovered_on_secondary" />
-        </FrameLayout>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Ready"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

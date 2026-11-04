@@ -58,7 +58,11 @@ class EditManualConsoleViewModel(val database: AppDatabase, manualHostId: Long?)
 			val registeredHost = selectedRegisteredHost.value?.id
 			val existingHost = existingHost?.value
 			if(existingHost != null)
-				database.manualHostDao().update(ManualHost(id = existingHost.id, host = host, registeredHost = registeredHost))
+				database.manualHostDao().update(ManualHost(
+					id = existingHost.id,
+					host = host,
+					registeredHost = registeredHost,
+					customName = existingHost.customName))
 			else
 				database.manualHostDao().insert(ManualHost(host = host, registeredHost = registeredHost))
 		}

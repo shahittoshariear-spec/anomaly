@@ -55,6 +55,10 @@
             android:name=".settings.SettingsActivity" />
 
         <activity
+            android:name="com.metallic.chiaki.settings.ThemePickerActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".settings.ControllerTestActivity"
             android:theme="@style/MageTheme"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"

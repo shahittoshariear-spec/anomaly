@@ -72,6 +72,15 @@
     <string name="theme_rust">Rust</string>
     <string name="theme_honey">Honey</string>
     <string name="theme_lapiz">Lapiz</string>
+    <string name="theme_picker_title">Theme</string>
+    <string name="theme_picker_subtitle">Pick a palette. The whole app switches instantly.</string>
+    <string name="theme_picker_selected">Selected</string>
+    <string name="action_rename">Rename</string>
+    <string name="rename_console_title">Rename console</string>
+    <string name="rename_console_hint">Console name</string>
+    <string name="action_save">Save</string>
+    <string name="console_status_ready">Ready</string>
+    <string name="console_status_standby">Standby</string>
     <string name="preferences_fullscreen_key">stream_fullscreen</string>
     <string name="preferences_fullscreen_title">Fullscreen</string>
     <string name="preferences_fullscreen_summary">Hide the status and navigation bars while streaming</string>
@@ -91,7 +100,7 @@
     <string name="preferences_about_title">About Anomaly</string>
     <string name="preferences_about_summary">Version, credits and license</string>
     <string name="about_title">About Anomaly</string>
-    <string name="about_message">Anomaly 1.2.0\n\nA personal PlayStation Remote Play client for Android with third-party controller support.\n\nBuilt on the open-source Chiaki-ng project, licensed under AGPL-3.0 with an OpenSSL exception. Source code: https://github.com/shahittoshariear-spec/anomaly\n\nPlayStation, PS5 and PSN are trademarks of Sony Interactive Entertainment. This app is not affiliated with or endorsed by Sony.</string>
+    <string name="about_message">Anomaly 1.3.0\n\nA personal PlayStation Remote Play client for Android with third-party controller support.\n\nBuilt on the open-source Chiaki-ng project, licensed under AGPL-3.0 with an OpenSSL exception. Source code: https://github.com/shahittoshariear-spec/anomaly\n\nPlayStation, PS5 and PSN are trademarks of Sony Interactive Entertainment. This app is not affiliated with or endorsed by Sony.</string>
     <string name="hint_regist_pin">PIN</string>
     <string name="action_regist">Register</string>
     <string name="entered_host_invalid">Please enter a valid host name</string>
@@ -123,6 +132,7 @@
     <string name="alert_message_import_failed">Failed to import settings from file:\n%s</string>
     <string name="action_import_failed_ack">Dismiss</string>
     <string name="title_edit_manual">Manual Console Entry</string>
+    <string name="edit_manual_subtitle">Add a console by IP address, then register it when you connect.</string>
     <string name="action_add_manual_save">Save</string>
     <string name="hint_add_manual_regist_host">Registered Console</string>
     <string name="add_manual_regist_on_connect">Register on first Connection</string>

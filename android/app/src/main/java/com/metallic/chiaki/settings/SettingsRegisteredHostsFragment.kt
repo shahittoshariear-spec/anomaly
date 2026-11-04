@@ -52,7 +52,9 @@ class SettingsRegisteredHostsFragment: AppCompatDialogFragment(), TitleFragment
 				val pos = viewHolder.adapterPosition
 				val host = viewModel.registeredHosts.value?.getOrNull(pos) ?: return
 				MaterialAlertDialogBuilder(viewHolder.itemView.context)
-					.setMessage(getString(R.string.alert_message_delete_registered_host, host.serverNickname, host.serverMac.toString()))
+					.setMessage(getString(R.string.alert_message_delete_registered_host,
+						host.customName?.takeIf { it.isNotBlank() } ?: host.serverNickname,
+						host.serverMac.toString()))
 					.setPositiveButton(R.string.action_delete) { _, _ ->
 						viewModel.deleteHost(host)
 					}

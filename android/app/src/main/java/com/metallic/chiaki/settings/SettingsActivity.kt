@@ -25,16 +25,23 @@ class SettingsActivity: ThemedActivity(), PreferenceFragmentCompat.OnPreferenceS
 		super.onCreate(savedInstanceState)
 		binding = ActivitySettingsBinding.inflate(layoutInflater)
 		setContentView(binding.root)
-		title = ""
 		setSupportActionBar(binding.toolbar)
+		supportActionBar?.setDisplayHomeAsUpEnabled(true)
+		supportActionBar?.setDisplayShowHomeEnabled(true)
+		binding.toolbar.setNavigationOnClickListener {
+			if(supportFragmentManager.backStackEntryCount > 0)
+				supportFragmentManager.popBackStack()
+			else
+				finish()
+		}
 
 		val rootFragment = SettingsFragment()
 		replaceFragment(rootFragment, false)
 		supportFragmentManager.addOnBackStackChangedListener {
 			val titleFragment = supportFragmentManager.findFragmentById(R.id.settingsFragment) as? TitleFragment ?: return@addOnBackStackChangedListener
-			binding.titleTextView.text = titleFragment.getTitle(resources)
+			supportActionBar?.title = titleFragment.getTitle(resources)
 		}
-		binding.titleTextView.text = rootFragment.getTitle(resources)
+		supportActionBar?.title = rootFragment.getTitle(resources)
 	}
 
 	override fun onPreferenceStartFragment(caller: PreferenceFragmentCompat, pref: Preference) = when(pref.fragment)

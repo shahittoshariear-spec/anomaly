@@ -13,6 +13,9 @@ sealed class DisplayHost
 	abstract val isPS5: Boolean
 
 	val isRegistered get() = registeredHost != null
+
+	/** True when this host has a record we can store a custom name on. */
+	val canRename get() = registeredHost != null || this is ManualDisplayHost
 }
 
 class DiscoveredDisplayHost(
@@ -21,7 +24,10 @@ class DiscoveredDisplayHost(
 ): DisplayHost()
 {
 	override val host get() = discoveredHost.hostAddr ?: ""
-	override val name get() = discoveredHost.hostName ?: registeredHost?.serverNickname
+	override val name get() =
+		registeredHost?.customName?.takeIf { it.isNotBlank() }
+			?: discoveredHost.hostName
+			?: registeredHost?.serverNickname
 	override val id get() = discoveredHost.hostId ?: registeredHost?.serverMac?.toString()
 	override val isPS5 get() = discoveredHost.isPS5
 
@@ -42,7 +48,10 @@ class ManualDisplayHost(
 ): DisplayHost()
 {
 	override val host get() = manualHost.host
-	override val name get() = registeredHost?.serverNickname
+	override val name get() =
+		manualHost.customName?.takeIf { it.isNotBlank() }
+			?: registeredHost?.customName?.takeIf { it.isNotBlank() }
+			?: registeredHost?.serverNickname
 	override val id get() = registeredHost?.serverMac?.toString()
 	override val isPS5: Boolean get() = registeredHost?.target?.isPS5 ?: false
 

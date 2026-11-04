@@ -18,7 +18,8 @@ import kotlinx.coroutines.flow.Flow
 data class ManualHost(
 	@PrimaryKey(autoGenerate = true) val id: Long = 0,
 	val host: String,
-	@ColumnInfo(name = "registered_host") val registeredHost: Long?
+	@ColumnInfo(name = "registered_host") val registeredHost: Long?,
+	@ColumnInfo(name = "custom_name") val customName: String? = null
 )
 
 data class ManualHostAndRegisteredHost(
@@ -36,6 +37,7 @@ interface ManualHostDao
 			manual_host.id as manual_host_id,
 			manual_host.host as manual_host_host,
 			manual_host.registered_host as manual_host_registered_host,
+			manual_host.custom_name as manual_host_custom_name,
 			registered_host.*
 		FROM manual_host LEFT OUTER JOIN registered_host ON manual_host.registered_host = registered_host.id WHERE manual_host.id = :id""")
 	suspend fun getByIdWithRegisteredHost(id: Long): ManualHostAndRegisteredHost
@@ -45,6 +47,9 @@ interface ManualHostDao
 
 	@Query("UPDATE manual_host SET registered_host = :registeredHostId WHERE id = :manualHostId")
 	suspend fun assignRegisteredHost(manualHostId: Long, registeredHostId: Long?)
+
+	@Query("UPDATE manual_host SET custom_name = :name WHERE id = :id")
+	suspend fun setCustomName(id: Long, name: String?)
 
 	@Insert
 	suspend fun insert(host: ManualHost)

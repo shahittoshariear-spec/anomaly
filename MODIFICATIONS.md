@@ -117,6 +117,25 @@ These only affect the build environment; streaming behavior is unchanged.
 - Vendored host `protoc.exe` and generated `third-party/nanopb/generator/proto/nanopb_pb2.py`
   so the protocol bindings build without a system protoc.
 
+## 1.3.0 interface changes
+
+- `common/ThemeManager.kt`: palette resolution for previews and a shared overlay lookup.
+- `settings/ThemePickerActivity.kt`, `settings/ThemePreviewAdapter.kt` and the associated
+  layouts: full-screen theme picker with live preview.
+- `common/ThemedActivity.kt`: captures the current screen and crossfades it into the
+  rebuilt activity whenever the theme changes, including on return from Settings.
+- `res/values/styles.xml`: seven per-palette alert-dialog themes and a themed popup menu,
+  so dialogs and card menus follow the selected accent instead of Material defaults.
+- `common/RegisteredHost.kt`, `common/ManualHost.kt`, `common/AppDatabase.kt`: optional
+  `custom_name` columns, DAO updates and database migration 2 → 3.
+- Console rename action in the card menu (`main/MainActivity.kt`,
+  `main/DisplayHostRecyclerViewAdapter.kt`, `main/MainViewModel.kt`).
+- `stream/LaunchAnimationView.kt`: rewritten launch sequence with theme-aware colors,
+  impact rings, sparks and tap-to-skip.
+- `main/MainActivity.kt`, `settings/SettingsActivity.kt` and layouts: direct settings icon,
+  redesigned console cards, modernised settings and manual-entry screens, and no export
+  section in preferences.
+
 ## Not yet implemented
 
 - PSN holepunch / internet Remote Play (the desktop Chiaki-ng feature). The Android JNI

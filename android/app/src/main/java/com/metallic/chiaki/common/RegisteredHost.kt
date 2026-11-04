@@ -20,7 +20,8 @@ data class RegisteredHost(
 	@ColumnInfo(name = "server_nickname") val serverNickname: String?,
 	@ColumnInfo(name = "rp_regist_key", typeAffinity = BLOB) val rpRegistKey: ByteArray, // CHIAKI_SESSION_AUTH_SIZE
 	@ColumnInfo(name = "rp_key_type") val rpKeyType: Int,
-	@ColumnInfo(name = "rp_key", typeAffinity = BLOB) val rpKey: ByteArray // 0x10
+	@ColumnInfo(name = "rp_key", typeAffinity = BLOB) val rpKey: ByteArray, // 0x10
+	@ColumnInfo(name = "custom_name") val customName: String? = null
 )
 {
 	constructor(registHost: RegistHost) : this(
@@ -92,6 +93,9 @@ interface RegisteredHostDao
 
 	@Query("SELECT COUNT(*) FROM registered_host")
 	fun count(): Flow<Int>
+
+	@Query("UPDATE registered_host SET custom_name = :name WHERE id = :id")
+	suspend fun setCustomName(id: Long, name: String?)
 
 	@Insert
 	suspend fun insert(host: RegisteredHost): Long
