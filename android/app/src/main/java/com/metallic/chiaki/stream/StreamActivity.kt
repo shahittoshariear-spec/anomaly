@@ -4,11 +4,13 @@ package com.metallic.chiaki.stream
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.app.AlertDialog
+import android.content.Context
 import android.graphics.Matrix
+import android.hardware.input.InputManager
 import android.os.*
 import android.view.*
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.IntentCompat
 import androidx.lifecycle.lifecycleScope
@@ -55,6 +57,20 @@ class StreamActivity : AppCompatActivity()
 
 	private val uiVisibilityHandler = Handler(Looper.getMainLooper())
 
+	private var updatingControlsSwitch = false
+	private var controlsChoiceOverridden = false
+	private var sessionPaused = false
+
+	private val controlsJobs = mutableMapOf<Fragment, Job>()
+
+	private val inputManager by lazy { getSystemService(Context.INPUT_SERVICE) as InputManager }
+	private val inputDeviceListener = object: InputManager.InputDeviceListener
+	{
+		override fun onInputDeviceAdded(deviceId: Int) = updateVirtualControlsForDeviceChange()
+		override fun onInputDeviceRemoved(deviceId: Int) = updateVirtualControlsForDeviceChange()
+		override fun onInputDeviceChanged(deviceId: Int) = updateVirtualControlsForDeviceChange()
+	}
+
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
@@ -74,6 +90,12 @@ class StreamActivity : AppCompatActivity()
 
 		binding = ActivityStreamBinding.inflate(layoutInflater)
 		setContentView(binding.root)
+		binding.launchAnimation.start { binding.launchAnimation.visibility = View.GONE }
+
+		supportFragmentManager.fragments.forEach {
+			if(it is TouchControlsFragment)
+				attachControlsFragment(it)
+		}
 
 		WindowCompat.setDecorFitsSystemWindows(window, false)
 		insetsController = WindowCompat.getInsetsController(window, window.decorView)
@@ -88,24 +110,30 @@ class StreamActivity : AppCompatActivity()
 			insets
 		}
 
-		viewModel.onScreenControlsEnabled.observe(this, Observer {
-			if(binding.onScreenControlsSwitch.isChecked != it)
-				binding.onScreenControlsSwitch.isChecked = it
-			if(binding.onScreenControlsSwitch.isChecked)
-				binding.touchpadOnlySwitch.isChecked = false
+		viewModel.virtualControlsVisible.observe(this, Observer { visible ->
+			updatingControlsSwitch = true
+			binding.onScreenControlsSwitch.isChecked = visible
+			updatingControlsSwitch = false
 		})
 		binding.onScreenControlsSwitch.setOnCheckedChangeListener { _, isChecked ->
-			viewModel.setOnScreenControlsEnabled(isChecked)
+			if(updatingControlsSwitch)
+				return@setOnCheckedChangeListener
+			controlsChoiceOverridden = true
+			viewModel.setVirtualControlsVisible(isChecked)
 			showOverlay()
 		}
 
 		viewModel.touchpadOnlyEnabled.observe(this, Observer {
 			if(binding.touchpadOnlySwitch.isChecked != it)
+			{
+				updatingControlsSwitch = true
 				binding.touchpadOnlySwitch.isChecked = it
-			if(binding.touchpadOnlySwitch.isChecked)
-				binding.onScreenControlsSwitch.isChecked = false
+				updatingControlsSwitch = false
+			}
 		})
 		binding.touchpadOnlySwitch.setOnCheckedChangeListener { _, isChecked ->
+			if(updatingControlsSwitch)
+				return@setOnCheckedChangeListener
 			viewModel.setTouchpadOnlyEnabled(isChecked)
 			showOverlay()
 		}
@@ -119,6 +147,7 @@ class StreamActivity : AppCompatActivity()
 		viewModel.session.attachToSurfaceView(binding.surfaceView)
 		viewModel.session.state.observe(this, Observer { this.stateChanged(it) })
 		adjustStreamViewAspect()
+		applyVirtualControlsMode()
 
 		if(Preferences(this).rumbleEnabled)
 		{
@@ -136,32 +165,38 @@ class StreamActivity : AppCompatActivity()
 		}
 	}
 
-	private var controlsJob: Job? = null
 
 	override fun onAttachFragment(fragment: Fragment)
 	{
 		super.onAttachFragment(fragment)
-		if(fragment is TouchControlsFragment)
-		{
-			controlsJob?.cancel()
-			controlsJob = fragment.controllerState
-				.onEach { viewModel.input.touchControllerState = it }
-				.launchIn(lifecycleScope)
-			fragment.onScreenControlsEnabled = viewModel.onScreenControlsEnabled
-			if(fragment is TouchpadOnlyFragment)
-				fragment.touchpadOnlyEnabled = viewModel.touchpadOnlyEnabled
-		}
+		if(fragment is TouchControlsFragment && ::viewModel.isInitialized)
+			attachControlsFragment(fragment)
+	}
+
+	private fun attachControlsFragment(fragment: TouchControlsFragment)
+	{
+		if(controlsJobs.containsKey(fragment))
+			return
+		controlsJobs[fragment] = fragment.controllerState
+			.onEach { viewModel.input.touchControllerState = it }
+			.launchIn(lifecycleScope)
+		fragment.virtualControlsVisible =
+			if(fragment is TouchpadOnlyFragment) viewModel.touchpadControlsVisible else viewModel.defaultControlsVisible
 	}
 
 	override fun onResume()
 	{
 		super.onResume()
+		sessionPaused = false
+		inputManager.registerInputDeviceListener(inputDeviceListener, null)
 		hideSystemUI()
 		viewModel.session.resume()
 	}
 
 	override fun onPause()
 	{
+		sessionPaused = true
+		inputManager.unregisterInputDeviceListener(inputDeviceListener)
 		super.onPause()
 		viewModel.session.pause()
 	}
@@ -169,7 +204,52 @@ class StreamActivity : AppCompatActivity()
 	override fun onDestroy()
 	{
 		super.onDestroy()
-		controlsJob?.cancel()
+		controlsJobs.values.forEach { it.cancel() }
+		controlsJobs.clear()
+		uiVisibilityHandler.removeCallbacks(hideSystemUIRunnable)
+	}
+
+	private fun applyVirtualControlsMode()
+	{
+		when(viewModel.preferences.virtualControlsMode)
+		{
+			Preferences.VirtualControlsMode.ALWAYS_SHOW -> viewModel.setVirtualControlsVisible(true)
+			Preferences.VirtualControlsMode.ALWAYS_HIDE -> viewModel.setVirtualControlsVisible(false)
+			Preferences.VirtualControlsMode.HIDE_WITH_CONTROLLER ->
+				viewModel.setVirtualControlsVisible(!hasPhysicalController())
+			Preferences.VirtualControlsMode.ASK -> binding.root.post { askAboutVirtualControls() }
+		}
+	}
+
+	private fun askAboutVirtualControls()
+	{
+		if(isFinishing || isDestroyed)
+			return
+		MaterialAlertDialogBuilder(this)
+			.setTitle(R.string.virtual_controls_ask_title)
+			.setMessage(R.string.virtual_controls_ask_message)
+			.setPositiveButton(R.string.virtual_controls_show) { _, _ -> viewModel.setVirtualControlsVisible(true) }
+			.setNegativeButton(R.string.virtual_controls_hide) { _, _ -> viewModel.setVirtualControlsVisible(false) }
+			.setOnCancelListener { viewModel.setVirtualControlsVisible(false) }
+			.show()
+	}
+
+	private fun updateVirtualControlsForDeviceChange()
+	{
+		if(viewModel.preferences.virtualControlsMode != Preferences.VirtualControlsMode.HIDE_WITH_CONTROLLER)
+			return
+		if(controlsChoiceOverridden)
+			return
+		viewModel.setVirtualControlsVisible(!hasPhysicalController())
+	}
+
+	private fun hasPhysicalController(): Boolean
+	{
+		return InputDevice.getDeviceIds().any { id ->
+			val device = InputDevice.getDevice(id) ?: return@any false
+			(device.sources and InputDevice.SOURCE_GAMEPAD == InputDevice.SOURCE_GAMEPAD) ||
+					(device.sources and InputDevice.SOURCE_JOYSTICK == InputDevice.SOURCE_JOYSTICK)
+		}
 	}
 
 	private fun reconnect()
@@ -232,6 +312,8 @@ class StreamActivity : AppCompatActivity()
 
 	private fun stateChanged(state: StreamState)
 	{
+		if(sessionPaused)
+			return
 		binding.progressBar.visibility = if(state == StreamStateConnecting) View.VISIBLE else View.GONE
 
 		when(state)
@@ -244,24 +326,20 @@ class StreamActivity : AppCompatActivity()
 					{
 						dialog?.dismiss()
 						val reasonStr = state.reasonString
-						val dialog = MaterialAlertDialogBuilder(this)
+						dialogContents = StreamQuitDialog
+						dialog = MaterialAlertDialogBuilder(this)
 							.setMessage(getString(R.string.alert_message_session_quit, state.reason.toString())
 									+ (if(reasonStr != null) "\n$reasonStr" else ""))
 							.setPositiveButton(R.string.action_reconnect) { _, _ ->
-								dialog = null
 								reconnect()
 							}
-							.setOnCancelListener {
-								dialog = null
-								finish()
-							}
 							.setNegativeButton(R.string.action_quit_session) { _, _ ->
-								dialog = null
 								finish()
 							}
+							.setOnCancelListener { finish() }
+							.setOnDismissListener { dialog = null }
 							.create()
-						dialogContents = StreamQuitDialog
-						dialog.show()
+						dialog?.show()
 					}
 					else
 						finish()
@@ -273,16 +351,14 @@ class StreamActivity : AppCompatActivity()
 				if(dialogContents != CreateErrorDialog)
 				{
 					dialog?.dismiss()
-					val dialog = MaterialAlertDialogBuilder(this)
-						.setMessage(getString(R.string.alert_message_session_create_error, state.error.errorCode.toString()))
-						.setOnDismissListener {
-							dialog = null
-							finish()
-						}
-						.setNegativeButton(R.string.action_quit_session) { _, _ -> }
-						.create()
 					dialogContents = CreateErrorDialog
-					dialog.show()
+					dialog = MaterialAlertDialogBuilder(this)
+						.setMessage(getString(R.string.alert_message_session_create_error, state.error.errorCode.toString()))
+						.setNegativeButton(R.string.action_quit_session) { _, _ -> finish() }
+						.setOnCancelListener { finish() }
+						.setOnDismissListener { dialog = null }
+						.create()
+					dialog?.show()
 				}
 			}
 
@@ -295,7 +371,8 @@ class StreamActivity : AppCompatActivity()
 					val view = layoutInflater.inflate(R.layout.dialog_login_pin, null)
 					val pinEditText = view.findViewById<EditText>(R.id.pinEditText)
 
-					val dialog = MaterialAlertDialogBuilder(this)
+					dialogContents = PinRequestDialog
+					dialog = MaterialAlertDialogBuilder(this)
 						.setMessage(
 							if(state.pinIncorrect)
 								R.string.alert_message_login_pin_request_incorrect
@@ -303,20 +380,13 @@ class StreamActivity : AppCompatActivity()
 								R.string.alert_message_login_pin_request)
 						.setView(view)
 						.setPositiveButton(R.string.action_login_pin_connect) { _, _ ->
-							dialog = null
 							viewModel.session.setLoginPin(pinEditText.text.toString())
 						}
-						.setOnCancelListener {
-							dialog = null
-							finish()
-						}
-						.setNegativeButton(R.string.action_quit_session) { _, _ ->
-							dialog = null
-							finish()
-						}
+						.setNegativeButton(R.string.action_quit_session) { _, _ -> finish() }
+						.setOnCancelListener { finish() }
+						.setOnDismissListener { dialog = null }
 						.create()
-					dialogContents = PinRequestDialog
-					dialog.show()
+					dialog?.show()
 				}
 			}
 			else ->{}

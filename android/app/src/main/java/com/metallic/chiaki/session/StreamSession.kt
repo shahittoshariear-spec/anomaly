@@ -30,6 +30,7 @@ class StreamSession(val connectInfo: ConnectInfo, val logManager: LogManager, va
 
 	private var surfaceTexture: SurfaceTexture? = null
 	private var surface: Surface? = null
+	private var shuttingDown = false
 
 	init
 	{
@@ -40,10 +41,14 @@ class StreamSession(val connectInfo: ConnectInfo, val logManager: LogManager, va
 
 	fun shutdown()
 	{
-		session?.stop()
-		session?.dispose()
+		val currentSession = session
+		shuttingDown = true
+		currentSession?.eventCallback = null
+		currentSession?.stop()
+		currentSession?.dispose()
 		session = null
 		_state.value = StreamStateIdle
+		shuttingDown = false
 		//surfaceTexture?.release()
 	}
 
@@ -75,6 +80,8 @@ class StreamSession(val connectInfo: ConnectInfo, val logManager: LogManager, va
 
 	private fun eventCallback(event: Event)
 	{
+		if(shuttingDown)
+			return
 		when(event)
 		{
 			is ConnectedEvent -> _state.postValue(StreamStateConnected)

@@ -6,7 +6,7 @@ is available at <https://github.com/streetpea/chiaki-ng>.
 
 ## Branding
 
-- `android/app/build.gradle`: application id `app.anomaly.remoteplay`, version 1.0.1,
+- `android/app/build.gradle`: application id `app.anomaly.remoteplay`, version 1.1.0,
   arm64-v8a and armeabi-v7a, local signing.
 - `android/settings.gradle`: project name `Anomaly`.
 - `android/app/src/main/res/values/strings.xml`: app name and main title.
@@ -28,6 +28,41 @@ is available at <https://github.com/streetpea/chiaki-ng>.
   edge-to-edge does not place toolbars under the status bar.
 - `settings/ControllerTestActivity.kt`: require the full `SOURCE_GAMEPAD` flag instead of
   any matching source bit, so touchscreens are not listed as gamepads.
+
+## 1.1.0 features and bug fixes
+
+- Virtual controls preference with four modes: always show, hide when a physical
+  controller is connected, always hide, and ask every time Remote Play starts. The mode is
+  resolved when a stream opens and reacts to controller connect/disconnect events.
+- In-stream virtual-control switch is now session-only; it no longer overwrites the saved
+  mode.
+- `stream/LaunchAnimationView.kt`: animated logo entry transition (converging lines, pulse,
+  radial burst and fade) wired into `StreamActivity`, plus a Settings preview.
+- Registration progress/success screen replaces the live registration log. Success shows
+  "Signed in successfully" and returns home after 1.6 seconds; failure keeps the log behind
+  a "View details" button.
+- Modern UI pass: dark surfaces, cyan accents, rounded cards, a redesigned empty state, a
+  proper app bar with subtitle, restyled registration screen, and a manual-console card.
+- Fixed duplicate registration setting `RESULT_OK` before the overwrite/discard choice, so
+  discarding could still report success.
+- Wrapped duplicate overwrite (delete + insert + manual-host assignment) in a Room
+  transaction so it cannot delete a registration without saving the replacement.
+- Fixed both touch-control fragments cancelling each other's input collector; each fragment
+  now has its own job.
+- Fixed the login-pin / quit / create-error dialogs being assigned to a shadowed local, which
+  left the activity's dialog reference null and could stack dialogs.
+- Ignored intentional session-quit events while the activity is paused, so backgrounding the
+  stream no longer closes the activity instead of reconnecting on resume.
+- Cleared virtual-control touch state when the controls are hidden, preventing stuck buttons.
+- Moved the controller-test device filter to require the full `SOURCE_GAMEPAD` flag and use
+  the single-argument `getMotionRange`, so it no longer lists touchscreens or misses ranges.
+- Let volume keys through in the controller test screen.
+- Fixed the duplicate `android:checked="true"` radio button that left both PS5 and PS4 8+
+  visually selected.
+- Refreshed the auto-bitrate flow when FPS or codec changes, not only resolution.
+- Guarded the PSN sign-in WebView/thread against callbacks after the activity is destroyed.
+- Made virtual-control visibility observation robust when fragments are restored before the
+  stream ViewModel is initialised.
 
 ## New features
 

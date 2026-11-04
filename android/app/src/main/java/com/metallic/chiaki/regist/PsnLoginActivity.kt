@@ -45,6 +45,7 @@ class PsnLoginActivity: AppCompatActivity()
 
 	private lateinit var binding: ActivityPsnLoginBinding
 	private var exchanging = false
+	private var cancelled = false
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -136,13 +137,19 @@ class PsnLoginActivity: AppCompatActivity()
 				val accountId = accountIdFromUserId(userId)
 
 				runOnUiThread {
+					if(cancelled || isFinishing || isDestroyed)
+						return@runOnUiThread
 					setResult(RESULT_OK, Intent().putExtra(EXTRA_ACCOUNT_ID, accountId))
 					finish()
 				}
 			}
 			catch(e: Exception)
 			{
-				runOnUiThread { showError(e.message ?: getString(R.string.psn_login_error)) }
+				runOnUiThread {
+					if(cancelled || isFinishing || isDestroyed)
+						return@runOnUiThread
+					showError(e.message ?: getString(R.string.psn_login_error))
+				}
 			}
 		}.start()
 	}
@@ -220,6 +227,8 @@ class PsnLoginActivity: AppCompatActivity()
 
 	private fun showError(message: String)
 	{
+		if(cancelled || isFinishing || isDestroyed)
+			return
 		exchanging = false
 		binding.statusOverlay.visibility = View.VISIBLE
 		binding.webView.visibility = View.INVISIBLE
@@ -232,5 +241,14 @@ class PsnLoginActivity: AppCompatActivity()
 			binding.progressBar.visibility = View.VISIBLE
 			binding.webView.loadUrl(buildLoginUrl())
 		}
+	}
+
+	override fun onDestroy()
+	{
+		cancelled = true
+		binding.webView.stopLoading()
+		binding.webView.loadUrl("about:blank")
+		binding.webView.destroy()
+		super.onDestroy()
 	}
 }

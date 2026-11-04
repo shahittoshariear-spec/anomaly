@@ -37,7 +37,45 @@ abstract class TouchControlsFragment : Fragment()
 	val controllerState: Flow<ControllerState> get() =
 		_controllerStateSource.flatMapLatest { it }
 
-	var onScreenControlsEnabled: LiveData<Boolean>? = null
+	var virtualControlsVisible: LiveData<Boolean>? = null
+		set(value)
+		{
+			if(field === value)
+				return
+			field = value
+			attachVisibilityObserver()
+		}
+
+	private var observedVisibility: LiveData<Boolean>? = null
+	private val visibilityObserver = Observer<Boolean> { visible ->
+		view?.visibility = if(visible) View.VISIBLE else View.GONE
+		if(!visible)
+			ownControllerState = ControllerState()
+	}
+
+	private fun attachVisibilityObserver()
+	{
+		val target = virtualControlsVisible ?: return
+		if(observedVisibility === target)
+			return
+		val owner = viewLifecycleOwnerLiveData.value ?: return
+		observedVisibility?.removeObserver(visibilityObserver)
+		observedVisibility = target
+		target.observe(owner, visibilityObserver)
+	}
+
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+	{
+		super.onViewCreated(view, savedInstanceState)
+		attachVisibilityObserver()
+	}
+
+	override fun onDestroyView()
+	{
+		observedVisibility?.removeObserver(visibilityObserver)
+		observedVisibility = null
+		super.onDestroyView()
+	}
 }
 
 class DefaultTouchControlsFragment : TouchControlsFragment()
@@ -85,10 +123,6 @@ class DefaultTouchControlsFragment : TouchControlsFragment()
 			rightX = quantizeStick(it.x)
 			rightY = quantizeStick(it.y)
 		}}
-
-		onScreenControlsEnabled?.observe(viewLifecycleOwner, Observer {
-			view.visibility = if(it) View.VISIBLE else View.GONE
-		})
 	}
 
 	private fun dpadStateChanged(direction: DPadView.Direction?)

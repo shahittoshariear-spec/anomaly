@@ -3,15 +3,40 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="colorOnPrimary">#ffffff</item>
+        <item name="colorOnPrimary">@color/on_surface</item>
         <item name="colorSecondary">@color/accent</item>
-        <item name="colorOnSecondary">#000000</item>
-        <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
-        <item name="android:navigationBarColor">?attr/colorPrimarySurface</item>
+        <item name="colorOnSecondary">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorError">@color/error</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog</item>
         <item name="alertDialogTheme">@style/AppTheme.AlertDialog.NonMaterial</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Anomaly.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Anomaly.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Anomaly.Large</item>
 
         <item name="android:windowActivityTransitions">true</item>
+    </style>
+
+    <style name="ShapeAppearance.Anomaly.Small" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="ShapeAppearance.Anomaly.Medium" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">18dp</item>
+    </style>
+
+    <style name="ShapeAppearance.Anomaly.Large" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
     </style>
 
     <style name="AppTheme.Toolbar" parent="AppTheme">
@@ -46,10 +71,14 @@
         <item name="colorOnPrimary">#ffffff</item>
         <item name="colorSecondary">@color/accent</item>
         <item name="colorOnSecondary">#000000</item>
-        <item name="colorPrimarySurface">@color/primary</item>
-        <item name="android:windowBackground">@color/primary</item>
-        <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
-        <item name="android:navigationBarColor">?attr/colorPrimarySurface</item>
+        <item name="colorPrimarySurface">@color/surface</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/background</item>
         <item name="colorControlNormal">@color/accent</item>
         <item name="colorButtonNormal">@color/accent</item>
         <item name="android:textAppearanceButton">@style/MageTheme.TextAppearanceButton</item>
@@ -97,6 +126,7 @@
         <item name="android:backgroundTint">?attr/colorSecondary</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="iconTint">?attr/colorOnSecondary</item>
+        <item name="cornerRadius">16dp</item>
     </style>
 
     <style name="MageTheme.TextAppearanceButton" parent="TextAppearance.MaterialComponents.Button">

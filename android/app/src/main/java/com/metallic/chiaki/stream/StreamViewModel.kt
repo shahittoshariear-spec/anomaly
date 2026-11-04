@@ -16,26 +16,36 @@ class StreamViewModel(val application: Application, val connectInfo: ConnectInfo
 	val preferences = Preferences(application)
 	val logManager = LogManager(application)
 
-	private var _session: StreamSession? = null
 	val input = StreamInput(application, preferences)
 	val session = StreamSession(connectInfo, logManager, preferences.logVerbose, input)
 
-	private var _onScreenControlsEnabled = MutableLiveData<Boolean>(preferences.onScreenControlsEnabled)
-	val onScreenControlsEnabled: LiveData<Boolean> get() = _onScreenControlsEnabled
+	private val _virtualControlsVisible = MutableLiveData<Boolean>(true)
+	val virtualControlsVisible: LiveData<Boolean> get() = _virtualControlsVisible
 
-	private var _touchpadOnlyEnabled = MutableLiveData<Boolean>(preferences.touchpadOnlyEnabled)
+	private val _touchpadOnlyEnabled = MutableLiveData<Boolean>(preferences.touchpadOnlyEnabled)
 	val touchpadOnlyEnabled: LiveData<Boolean> get() = _touchpadOnlyEnabled
+
+	val defaultControlsVisible = MediatorLiveData<Boolean>().apply {
+		fun update() { value = (_virtualControlsVisible.value ?: true) && !(_touchpadOnlyEnabled.value ?: false) }
+		addSource(_virtualControlsVisible) { update() }
+		addSource(_touchpadOnlyEnabled) { update() }
+	}
+
+	val touchpadControlsVisible = MediatorLiveData<Boolean>().apply {
+		fun update() { value = (_virtualControlsVisible.value ?: true) && (_touchpadOnlyEnabled.value ?: false) }
+		addSource(_virtualControlsVisible) { update() }
+		addSource(_touchpadOnlyEnabled) { update() }
+	}
 
 	override fun onCleared()
 	{
 		super.onCleared()
-		_session?.shutdown()
+		session.shutdown()
 	}
 
-	fun setOnScreenControlsEnabled(enabled: Boolean)
+	fun setVirtualControlsVisible(visible: Boolean)
 	{
-		preferences.onScreenControlsEnabled = enabled
-		_onScreenControlsEnabled.value = enabled
+		_virtualControlsVisible.value = visible
 	}
 
 	fun setTouchpadOnlyEnabled(enabled: Boolean)

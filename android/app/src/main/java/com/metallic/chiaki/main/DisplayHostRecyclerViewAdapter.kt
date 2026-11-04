@@ -55,7 +55,8 @@ class DisplayHostRecyclerViewAdapter(
 		val context = holder.itemView.context
 		val host = hosts[position]
 		holder.binding.also {
-			it.nameTextView.text = host.name
+			it.nameTextView.text = host.name?.ifEmpty { context.getString(R.string.manual_console_name) }
+				?: context.getString(R.string.manual_console_name)
 			it.hostTextView.text = context.getString(R.string.display_host_host, host.host)
 			val id = host.id
 			it.idTextView.text =
@@ -85,7 +86,7 @@ class DisplayHostRecyclerViewAdapter(
 						else -> if(host.isPS5) R.drawable.ic_console_ps5 else R.drawable.ic_console
 					}
 					host.isPS5 -> R.drawable.ic_console_ps5
-					else -> R.drawable.ic_console
+					else -> R.drawable.ic_console_simple
 				}
 			)
 			it.root.setOnClickListener { clickCallback(host) }

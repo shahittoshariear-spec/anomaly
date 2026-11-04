@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Anomaly</string>
     <string name="title_main">Anomaly</string>
+    <string name="title_subtitle">REMOTE PLAY</string>
+    <string name="empty_state_title">Ready to play</string>
+    <string name="manual_console_name">Manual console</string>
+    <string name="action_register_short">Register a console</string>
     <string name="title_settings">Settings</string>
     <string name="alert_message_standby_wakeup">The Console is currently in standby mode. Do you want to send a Wakeup packet instead of trying to connect immediately?</string>
     <string name="alert_message_session_quit">Session has quit: %s</string>
@@ -26,14 +30,16 @@
     <string name="regist_pin_instructions_ps5_before">On the PS5, navigate to</string>
     <string name="regist_pin_instructions_ps5_navigation">Settings →\nSystem → Remote Play →\nLink Device</string>
     <string name="regist_pin_instructions_after">to obtain the PIN</string>
-    <string name="title_regist">Register Console</string>
+    <string name="title_regist">Register console</string>
+    <string name="regist_subtitle">Link your PS5 to start streaming.</string>
     <string name="hint_regist_host">Host</string>
     <string name="regist_broadcast">Broadcast</string>
     <string name="regist_option_ps4_lt_7">PS4 &lt; 7.0</string>
     <string name="regist_option_ps4_ge_7">PS4 ≥ 7.0, &lt; 8</string>
     <string name="regist_option_ps4_ge_8">PS4 ≥ 8.0</string>
     <string name="regist_option_ps5">PS5</string>
-    <string name="regist_psn_account_id_help">Sign in below to fill in your Account ID automatically, or obtain it manually:</string>
+    <string name="regist_psn_account_id_help">Sign in below and your Account ID fills in automatically.</string>
+    <string name="regist_psn_manual_help">How do I find it manually?</string>
     <string name="regist_psn_account_id_help_url">https://git.sr.ht/~thestr4ng3r/chiaki/tree/master/item/README.md#obtaining-your-psn-accountid</string>
     <string name="hint_regist_psn_online_id">PSN Online ID (username, case-sensitive)</string>
     <string name="hint_regist_psn_account_id">PSN Account ID (8 bytes, base64)</string>
@@ -53,10 +59,23 @@
     <string name="controller_test_motion">Motion from %1$s\n%2$s</string>
     <string name="preferences_controller_test_title">Controller test</string>
     <string name="preferences_controller_test_summary">Check buttons and sticks reported by your gamepad</string>
+    <string name="preferences_preview_animation_title">Preview launch animation</string>
+    <string name="preferences_preview_animation_summary">See the transition used when Remote Play starts</string>
+    <string name="preferences_virtual_controls_mode_key">virtual_controls_mode</string>
+    <string name="preferences_virtual_controls_title">Virtual controls</string>
+    <string name="preferences_virtual_controls_summary">When to show the on-screen buttons</string>
+    <string name="virtual_controls_always_show">Always show</string>
+    <string name="virtual_controls_hide_with_controller">Hide when a controller is connected</string>
+    <string name="virtual_controls_always_hide">Always hide</string>
+    <string name="virtual_controls_ask">Ask every time Remote Play starts</string>
+    <string name="virtual_controls_ask_title">Virtual controls</string>
+    <string name="virtual_controls_ask_message">Show the on-screen controls for this session?</string>
+    <string name="virtual_controls_show">Show</string>
+    <string name="virtual_controls_hide">Hide</string>
     <string name="preferences_about_title">About Anomaly</string>
     <string name="preferences_about_summary">Version, credits and license</string>
     <string name="about_title">About Anomaly</string>
-    <string name="about_message">Anomaly 1.0.1\n\nA personal PlayStation Remote Play client for Android with third-party controller support.\n\nBuilt on the open-source Chiaki-ng project, licensed under AGPL-3.0 with an OpenSSL exception. Source code: https://github.com/shahittoshariear-spec/anomaly\n\nPlayStation, PS5 and PSN are trademarks of Sony Interactive Entertainment. This app is not affiliated with or endorsed by Sony.</string>
+    <string name="about_message">Anomaly 1.1.0\n\nA personal PlayStation Remote Play client for Android with third-party controller support.\n\nBuilt on the open-source Chiaki-ng project, licensed under AGPL-3.0 with an OpenSSL exception. Source code: https://github.com/shahittoshariear-spec/anomaly\n\nPlayStation, PS5 and PSN are trademarks of Sony Interactive Entertainment. This app is not affiliated with or endorsed by Sony.</string>
     <string name="hint_regist_pin">PIN</string>
     <string name="action_regist">Register</string>
     <string name="entered_host_invalid">Please enter a valid host name</string>
@@ -67,6 +86,17 @@
     <string name="action_export_settings">Export Settings</string>
     <string name="regist_info_success">Regist successful.</string>
     <string name="regist_info_failed">Regist failed.</string>
+    <string name="action_view_details">View details</string>
+    <string name="action_back_home">Back to home</string>
+    <string name="regist_status_running_title">Signing in to your console</string>
+    <string name="regist_status_running_message">Linking to your PS5. Keep the PIN screen open.</string>
+    <string name="regist_status_success_title">Signed in successfully</string>
+    <string name="regist_status_success_message">Your console is ready. Taking you back home\u2026</string>
+    <string name="regist_status_duplicate_title">Console already registered</string>
+    <string name="regist_status_duplicate_message">This console is already in your list.</string>
+    <string name="regist_status_failed_title">Registration failed</string>
+    <string name="regist_status_failed_message">Check the PIN and that the console is on the same network, then try again.</string>
+    <string name="regist_status_no_details">No details were captured.</string>
     <string name="alert_regist_duplicate">The console with MAC %s has already been registered. Should the previous record be overwritten?</string>
     <string name="action_regist_overwrite">Overwrite</string>
     <string name="action_regist_discard">Cancel</string>
@@ -123,7 +153,7 @@
     <string name="registered_hosts_empty_info">No Consoles registered.</string>
     <string name="display_hosts_empty_discovery_off_info">No consoles added yet.\nEnable Discovery to automatically find consoles on your local network.</string>
     <string name="display_hosts_empty_discovery_on_info">No consoles added or discovered.</string>
-    <string name="stream_on_screen_controls">On-Screen Controls</string>
+    <string name="stream_on_screen_controls">Virtual controls</string>
     <string name="stream_touchpad_only">Touchpad only</string>
 
     <!-- Don't localize these -->

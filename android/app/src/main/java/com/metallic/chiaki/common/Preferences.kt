@@ -49,11 +49,25 @@ class Preferences(context: Context)
 		val codecAll = Codec.values()
 	}
 
+	enum class VirtualControlsMode(val value: String, @StringRes val title: Int)
+	{
+		ALWAYS_SHOW("always_show", R.string.virtual_controls_always_show),
+		HIDE_WITH_CONTROLLER("hide_with_controller", R.string.virtual_controls_hide_with_controller),
+		ALWAYS_HIDE("always_hide", R.string.virtual_controls_always_hide),
+		ASK("ask", R.string.virtual_controls_ask);
+
+		companion object
+		{
+			val all = values()
+			fun fromValue(value: String?) = all.firstOrNull { it.value == value } ?: HIDE_WITH_CONTROLLER
+		}
+	}
+
 	private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 	private val sharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
 		when(key)
 		{
-			resolutionKey -> _bitrateAutoFlow.value = bitrateAuto
+			resolutionKey, fpsKey, codecKey -> _bitrateAutoFlow.value = bitrateAuto
 		}
 	}.also { sharedPreferences.registerOnSharedPreferenceChangeListener(it) }
 
@@ -68,6 +82,18 @@ class Preferences(context: Context)
 	var onScreenControlsEnabled
 		get() = sharedPreferences.getBoolean(onScreenControlsEnabledKey, true)
 		set(value) { sharedPreferences.edit().putBoolean(onScreenControlsEnabledKey, value).apply() }
+
+	val virtualControlsModeKey get() = resources.getString(R.string.preferences_virtual_controls_mode_key)
+	var virtualControlsMode: VirtualControlsMode
+		get()
+		{
+			val stored = sharedPreferences.getString(virtualControlsModeKey, null)
+			if(stored != null)
+				return VirtualControlsMode.fromValue(stored)
+			// Migrate the old on/off switch: off meant the user wanted them hidden.
+			return if(onScreenControlsEnabled) VirtualControlsMode.HIDE_WITH_CONTROLLER else VirtualControlsMode.ALWAYS_HIDE
+		}
+		set(value) { sharedPreferences.edit().putString(virtualControlsModeKey, value.value).apply() }
 
 	val touchpadOnlyEnabledKey get() = resources.getString(R.string.preferences_touchpad_only_enabled_key)
 	var touchpadOnlyEnabled

@@ -61,6 +61,12 @@
             android:exported="false" />
 
         <activity
+            android:name=".settings.LaunchPreviewActivity"
+            android:theme="@style/StreamTheme"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:exported="false" />
+
+        <activity
             android:name=".regist.RegistActivity"
             android:theme="@style/MageTheme"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"

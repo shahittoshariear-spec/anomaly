@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.room.withTransaction
 import com.metallic.chiaki.common.AppDatabase
 import com.metallic.chiaki.common.MacAddress
 import com.metallic.chiaki.common.RegisteredHost
@@ -96,18 +97,26 @@ class RegistExecuteViewModel(val database: AppDatabase): ViewModel()
 		val host = host ?: return
 		val assignManualHostId = assignManualHostId
 		viewModelScope.launch(Dispatchers.IO) {
-			val dao = database.registeredHostDao()
-			val manualHostDao = database.manualHostDao()
-			val registeredHost = RegisteredHost(host)
-			dao.deleteByMac(registeredHost.serverMac)
-			val registeredHostId = dao.insert(registeredHost)
-			if(assignManualHostId != null)
+			try
 			{
-				manualHostDao.assignRegisteredHost(assignManualHostId, registeredHostId)
+				database.withTransaction {
+					val dao = database.registeredHostDao()
+					val manualHostDao = database.manualHostDao()
+					val registeredHost = RegisteredHost(host)
+					dao.deleteByMac(registeredHost.serverMac)
+					val registeredHostId = dao.insert(registeredHost)
+					if(assignManualHostId != null)
+						manualHostDao.assignRegisteredHost(assignManualHostId, registeredHostId)
+				}
+				withContext(Dispatchers.Main) {
+					Log.i("RegistExecute", "Registered Host saved in db")
+					_state.value = State.SUCCESSFUL
+				}
 			}
-			withContext(Dispatchers.Main) {
-				Log.i("RegistExecute", "Registered Host saved in db")
-				_state.value = State.SUCCESSFUL
+			catch(e: Exception)
+			{
+				Log.e("RegistExecute", "Failed to save registered host", e)
+				withContext(Dispatchers.Main) { _state.value = State.FAILED }
 			}
 		}
 	}

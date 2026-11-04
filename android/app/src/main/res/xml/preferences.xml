@@ -26,6 +26,18 @@
             app:icon="@drawable/ic_gamepad" />
 
         <Preference
+            app:key="preview_animation"
+            app:title="@string/preferences_preview_animation_title"
+            app:summary="@string/preferences_preview_animation_summary"
+            app:icon="@drawable/ic_motion" />
+
+        <ListPreference
+            app:key="@string/preferences_virtual_controls_mode_key"
+            app:title="@string/preferences_virtual_controls_title"
+            app:summary="%s"
+            app:icon="@drawable/ic_gamepad" />
+
+        <Preference
             app:key="about"
             app:title="@string/preferences_about_title"
             app:summary="@string/preferences_about_summary"

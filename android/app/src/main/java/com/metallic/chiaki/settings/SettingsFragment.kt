@@ -49,6 +49,7 @@ class DataStore(val preferences: Preferences): PreferenceDataStore()
 		preferences.fpsKey -> preferences.fps.value
 		preferences.bitrateKey -> preferences.bitrate?.toString() ?: ""
 		preferences.codecKey -> preferences.codec.value
+		preferences.virtualControlsModeKey -> preferences.virtualControlsMode.value
 		else -> defValue
 	}
 
@@ -72,6 +73,8 @@ class DataStore(val preferences: Preferences): PreferenceDataStore()
 				val codec = Preferences.Codec.values().firstOrNull { it.value == value } ?: return
 				preferences.codec = codec
 			}
+			preferences.virtualControlsModeKey ->
+				preferences.virtualControlsMode = Preferences.VirtualControlsMode.fromValue(value)
 		}
 	}
 }
@@ -125,6 +128,11 @@ class SettingsFragment: PreferenceFragmentCompat(), TitleFragment
 			it.entries = Preferences.codecAll.map { codec -> getString(codec.title) }.toTypedArray()
 		}
 
+		preferenceScreen.findPreference<ListPreference>(getString(R.string.preferences_virtual_controls_mode_key))?.let {
+			it.entryValues = Preferences.VirtualControlsMode.all.map { mode -> mode.value }.toTypedArray()
+			it.entries = Preferences.VirtualControlsMode.all.map { mode -> getString(mode.title) }.toTypedArray()
+		}
+
 		val registeredHostsPreference = preferenceScreen.findPreference<Preference>("registered_hosts")
 		viewModel.registeredHostsCount.observe(this, Observer {
 			registeredHostsPreference?.summary = getString(R.string.preferences_registered_hosts_summary, it)
@@ -132,6 +140,11 @@ class SettingsFragment: PreferenceFragmentCompat(), TitleFragment
 
 		preferenceScreen.findPreference<Preference>("controller_test")?.setOnPreferenceClickListener {
 			startActivity(Intent(requireContext(), ControllerTestActivity::class.java))
+			true
+		}
+
+		preferenceScreen.findPreference<Preference>("preview_animation")?.setOnPreferenceClickListener {
+			startActivity(Intent(requireContext(), LaunchPreviewActivity::class.java))
 			true
 		}
 

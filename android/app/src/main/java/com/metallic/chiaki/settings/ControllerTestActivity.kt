@@ -38,6 +38,8 @@ class ControllerTestActivity: AppCompatActivity()
 	{
 		if(event.keyCode == KeyEvent.KEYCODE_BACK)
 			return super.dispatchKeyEvent(event)
+		if(event.keyCode == KeyEvent.KEYCODE_VOLUME_UP || event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
+			return super.dispatchKeyEvent(event)
 
 		val action = when(event.action)
 		{
@@ -113,7 +115,7 @@ class ControllerTestActivity: AppCompatActivity()
 				"RTRIGGER" to MotionEvent.AXIS_RTRIGGER
 			))
 			{
-				val range = device.getMotionRange(axis, device.sources) ?: continue
+				val range = device.getMotionRange(axis) ?: continue
 				builder.append("    $name: %.2f .. %.2f\n".format(range.min, range.max))
 			}
 			builder.append('\n')

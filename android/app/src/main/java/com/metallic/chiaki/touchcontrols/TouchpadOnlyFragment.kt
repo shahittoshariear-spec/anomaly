@@ -6,15 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import com.metallic.chiaki.databinding.FragmentTouchpadOnlyBinding
 import kotlinx.coroutines.flow.combine
 
 class TouchpadOnlyFragment : TouchControlsFragment()
 {
-	var touchpadOnlyEnabled: LiveData<Boolean>? = null
-
 	private var _binding: FragmentTouchpadOnlyBinding? = null
 	private val binding get() = _binding!!
 
@@ -29,9 +25,6 @@ class TouchpadOnlyFragment : TouchControlsFragment()
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?)
 	{
 		super.onViewCreated(view, savedInstanceState)
-		touchpadOnlyEnabled?.observe(viewLifecycleOwner, Observer {
-			view.visibility = if(it) View.VISIBLE else View.GONE
-		})
 	}
 
 	private fun buttonStateChanged(buttonMask: UInt) = { pressed: Boolean ->

@@ -117,4 +117,10 @@
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.metallic.chiaki.stream.LaunchAnimationView
+        android:id="@+id/launchAnimation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background" />
+
 </FrameLayout>

@@ -3,6 +3,7 @@
 package com.metallic.chiaki.regist
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.view.View
@@ -51,6 +52,9 @@ class RegistActivity: AppCompatActivity(), RevealActivity
 		binding.broadcastCheckBox.isChecked = intent.getBooleanExtra(EXTRA_BROADCAST, true)
 
 		binding.registButton.setOnClickListener { doRegist() }
+		binding.psnAccountIdHelpURLTextView.setOnClickListener {
+			startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.regist_psn_account_id_help_url))))
+		}
 		binding.psnLoginButton.setOnClickListener {
 			startActivityForResult(Intent(this, PsnLoginActivity::class.java), REQUEST_PSN_LOGIN)
 		}

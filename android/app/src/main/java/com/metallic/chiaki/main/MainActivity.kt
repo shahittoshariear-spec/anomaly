@@ -39,8 +39,8 @@ class MainActivity : AppCompatActivity()
 		binding = ActivityMainBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 
-		title = ""
 		setSupportActionBar(binding.toolbar)
+		supportActionBar?.subtitle = getString(R.string.title_subtitle)
 
 		binding.floatingActionButton.setOnClickListener {
 			expandFloatingActionButton(!binding.floatingActionButton.isExpanded)
@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity()
 
 		binding.registerButton.setOnClickListener { showRegistration() }
 		binding.registerLabelButton.setOnClickListener { showRegistration() }
+		binding.emptyRegisterButton.setOnClickListener { showRegistration() }
 
 		setupBackNavigation()
 
@@ -83,7 +84,6 @@ class MainActivity : AppCompatActivity()
 		{
 			binding.emptyInfoLayout.visibility = View.VISIBLE
 			val discoveryActive = viewModel.discoveryActive.value ?: false
-			binding.emptyInfoImageView.setImageResource(if(discoveryActive) R.drawable.ic_discover_on else R.drawable.ic_discover_off)
 			binding.emptyInfoTextView.setText(if(discoveryActive) R.string.display_hosts_empty_discovery_on_info else R.string.display_hosts_empty_discovery_off_info)
 		}
 		else
