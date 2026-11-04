@@ -5,6 +5,7 @@ Completed on the build machine (Windows, Android SDK in `tools/android-sdk`).
 | Check | Result |
 | --- | --- |
 | `:app:assembleRelease` | Passed |
+| Fresh clone of the public repo + submodules, `:app:assembleRelease` | Passed |
 | `:app:lintVitalRelease` (part of release build) | Passed |
 | JVM unit tests (`:app:testReleaseUnitTest`) | Passed (3 test classes) |
 | APK v1/v2/v3 signature | Valid, `CN=Anomaly` |
