@@ -101,6 +101,11 @@ void android_chiaki_video_decoder_set_surface(AndroidChiakiVideoDecoder *decoder
 	AMediaFormat_setString(format, AMEDIAFORMAT_KEY_MIME, mime);
 	AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_WIDTH, decoder->target_width);
 	AMediaFormat_setInt32(format, AMEDIAFORMAT_KEY_HEIGHT, decoder->target_height);
+	// Ask MediaCodec for its low-latency path where the device supports it. This
+	// reduces the decoder's internal buffering (typically one frame), which is the
+	// largest remaining app-side source of input-to-photon delay. Unknown keys are
+	// ignored by codecs that do not implement it.
+	AMediaFormat_setInt32(format, "low-latency", 1);
 
 	media_status_t r = AMediaCodec_configure(decoder->codec, format, decoder->window, NULL, 0);
 	if(r != AMEDIA_OK)

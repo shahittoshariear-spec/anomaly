@@ -160,11 +160,33 @@ class StreamActivity : ThemedActivity()
 		if(Preferences(this).rumbleEnabled)
 		{
 			val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+			// Rumble packets arrive at frame rate. Restarting a one-shot vibration for
+			// every packet meant a cancel() + vibrate() pair on the main thread up to
+			// 60 times per second, which delays controller event dispatch and drains
+			// battery. Only react when the amplitude meaningfully changes, and refresh
+			// the one-shot a few times per second so long rumbles keep going.
+			var lastAmplitude = -1
+			var lastIssuedAt = 0L
 			viewModel.session.rumbleState.observe(this, Observer {
 				val amplitude = min(255, (it.left.toInt() + it.right.toInt()) / 2)
-				vibrator.cancel()
+				val now = SystemClock.uptimeMillis()
+
 				if(amplitude == 0)
+				{
+					if(lastAmplitude != 0)
+					{
+						vibrator.cancel()
+						lastAmplitude = 0
+					}
 					return@Observer
+				}
+
+				val changed = lastAmplitude < 0 || kotlin.math.abs(amplitude - lastAmplitude) >= 8
+				if(!changed && now - lastIssuedAt < 400)
+					return@Observer
+
+				lastAmplitude = amplitude
+				lastIssuedAt = now
 				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 					vibrator.vibrate(VibrationEffect.createOneShot(1000, amplitude))
 				else
