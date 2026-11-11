@@ -5,6 +5,7 @@ package com.metallic.chiaki.stream
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.graphics.Matrix
 import android.hardware.input.InputManager
 import android.os.*
@@ -77,6 +78,12 @@ class StreamActivity : ThemedActivity()
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
+
+		// Optionally rotate to landscape as soon as the stream opens. The activity
+		// declares orientation|screenSize in configChanges, so this does not recreate
+		// it. SENSOR_LANDSCAPE lets the user flip between the two landscape sides.
+		if(Preferences(this).autoLandscape)
+			requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 
 		val connectInfo = IntentCompat.getParcelableExtra(intent, EXTRA_CONNECT_INFO, ConnectInfo::class.java)
 		if(connectInfo == null)

@@ -84,6 +84,9 @@
     <string name="preferences_fullscreen_key">stream_fullscreen</string>
     <string name="preferences_fullscreen_title">Fullscreen</string>
     <string name="preferences_fullscreen_summary">Hide the status and navigation bars while streaming</string>
+    <string name="preferences_auto_landscape_key">stream_auto_landscape</string>
+    <string name="preferences_auto_landscape_title">Landscape when streaming</string>
+    <string name="preferences_auto_landscape_summary">Rotate the phone to landscape automatically when remote play starts</string>
     <string name="stream_fullscreen_enter">Enter fullscreen</string>
     <string name="stream_fullscreen_exit">Exit fullscreen</string>
     <string name="stream_stopped">Remote Play stopped</string>

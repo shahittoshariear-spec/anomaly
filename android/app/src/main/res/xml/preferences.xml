@@ -68,6 +68,12 @@
             app:icon="@drawable/ic_display_normal" />
 
         <SwitchPreference
+            app:key="@string/preferences_auto_landscape_key"
+            app:title="@string/preferences_auto_landscape_title"
+            app:summary="@string/preferences_auto_landscape_summary"
+            app:icon="@drawable/ic_display_normal" />
+
+        <SwitchPreference
             app:key="@string/preferences_button_haptic_enabled_key"
             app:title="@string/preferences_button_haptic_enabled_title"
             app:summary="@string/preferences_button_haptic_enabled_summary"

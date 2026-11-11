@@ -122,6 +122,11 @@ class Preferences(context: Context)
 		get() = sharedPreferences.getBoolean(fullscreenKey, true)
 		set(value) { sharedPreferences.edit().putBoolean(fullscreenKey, value).apply() }
 
+	val autoLandscapeKey get() = resources.getString(R.string.preferences_auto_landscape_key)
+	var autoLandscape
+		get() = sharedPreferences.getBoolean(autoLandscapeKey, true)
+		set(value) { sharedPreferences.edit().putBoolean(autoLandscapeKey, value).apply() }
+
 	val touchpadOnlyEnabledKey get() = resources.getString(R.string.preferences_touchpad_only_enabled_key)
 	var touchpadOnlyEnabled
 		get() = sharedPreferences.getBoolean(touchpadOnlyEnabledKey, false)
