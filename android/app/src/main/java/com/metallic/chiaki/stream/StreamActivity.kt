@@ -104,6 +104,9 @@ class StreamActivity : ThemedActivity()
 		}
 
 		WindowCompat.setDecorFitsSystemWindows(window, false)
+		// Belt and braces: the layout already sets keepScreenOn, but some OEM
+		// power managers only honour the window flag.
+		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 		insetsController = WindowCompat.getInsetsController(window, window.decorView)
 		insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
@@ -228,6 +231,15 @@ class StreamActivity : ThemedActivity()
 		sessionPaused = true
 		inputManager.unregisterInputDeviceListener(inputDeviceListener)
 		super.onPause()
+
+		// Turning the display off is not a reason to drop the remote play session.
+		// Keep it running; when the display comes back the surface is reattached
+		// and a keyframe is requested. Backgrounding the app (screen still on)
+		// still pauses the stream to save battery.
+		val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+		if(!powerManager.isInteractive)
+			return
+
 		viewModel.session.pause()
 	}
 

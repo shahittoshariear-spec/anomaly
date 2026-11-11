@@ -110,6 +110,10 @@ class StreamSession(val connectInfo: ConnectInfo, val logManager: LogManager, va
 				val surface = holder.surface
 				this@StreamSession.surface = surface
 				session?.setSurface(surface)
+				// The decoder may have been shut down while the display was off.
+				// Ask the console for a fresh keyframe so video resumes immediately
+				// instead of waiting for the next one or showing corrupt frames.
+				session?.requestIdr()
 			}
 
 			override fun surfaceDestroyed(holder: SurfaceHolder)

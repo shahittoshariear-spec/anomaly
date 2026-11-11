@@ -24,19 +24,24 @@ class StreamInput(val context: Context, val preferences: Preferences)
 	{
 		val controllerState = sensorControllerState or keyControllerState or motionControllerState
 
-		val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-		@Suppress("DEPRECATION")
-		when(windowManager.defaultDisplay.rotation)
+		// Rotation only affects the motion sensor values. Skip the per-event
+		// getSystemService/display lookups for the common gamepad-only case.
+		if(motionEnabled)
 		{
-			Surface.ROTATION_90 -> {
-				controllerState.accelX *= -1.0f
-				controllerState.accelZ *= -1.0f
-				controllerState.gyroX *= -1.0f
-				controllerState.gyroZ *= -1.0f
-				controllerState.orientX *= -1.0f
-				controllerState.orientZ *= -1.0f
+			val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+			@Suppress("DEPRECATION")
+			when(windowManager.defaultDisplay.rotation)
+			{
+				Surface.ROTATION_90 -> {
+					controllerState.accelX *= -1.0f
+					controllerState.accelZ *= -1.0f
+					controllerState.gyroX *= -1.0f
+					controllerState.gyroZ *= -1.0f
+					controllerState.orientX *= -1.0f
+					controllerState.orientZ *= -1.0f
+				}
+				else -> {}
 			}
-			else -> {}
 		}
 
 		// prioritize motion controller's l2 and r2 over key
@@ -60,6 +65,7 @@ class StreamInput(val context: Context, val preferences: Preferences)
 		}
 
 	private val swapCrossMoon = preferences.swapCrossMoon
+	private val motionEnabled = preferences.motionEnabled
 
 	private val sensorEventListener = object: SensorEventListener {
 		override fun onSensorChanged(event: SensorEvent)
@@ -117,7 +123,7 @@ class StreamInput(val context: Context, val preferences: Preferences)
 
 	fun observe(lifecycleOwner: LifecycleOwner)
 	{
-		if(preferences.motionEnabled)
+		if(motionEnabled)
 			lifecycleOwner.lifecycle.addObserver(motionLifecycleObserver)
 	}
 
