@@ -43,7 +43,7 @@ class LaunchAnimationView @JvmOverloads constructor(
 {
 	private companion object
 	{
-		private const val DURATION_MS = 2600L
+		private const val DURATION_MS = 2100L
 		private const val LINE_COUNT = 34
 		private const val SPARK_COUNT = 26
 	}

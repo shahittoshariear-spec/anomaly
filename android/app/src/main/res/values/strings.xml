@@ -107,6 +107,12 @@
     <string name="hint_regist_pin">PIN</string>
     <string name="action_regist">Register</string>
     <string name="entered_host_invalid">Please enter a valid host name</string>
+    <string name="edit_manual_remote_hint">Remote play: enter your router\'s public IP or DDNS name, and forward UDP 9295-9299 and 9302 to the console. If there are two routers, forward the ports on both.</string>
+    <string name="action_test_connection">Test connection</string>
+    <string name="test_connection_testing">Sending discovery request…</string>
+    <string name="test_connection_success">Reachable: %1$s (%2$d ms)</string>
+    <string name="test_connection_timeout">No reply. Check the address and that UDP 9302 is forwarded to the console.</string>
+    <string name="test_connection_failed">Failed: %1$s</string>
     <string name="regist_psn_online_id_invalid">Please enter a valid PSN ID</string>
     <string name="regist_psn_account_id_invalid">Please enter a valid 8-byte Account ID in Base64</string>
     <string name="regist_pin_invalid">Please enter a valid %d-digit PIN</string>

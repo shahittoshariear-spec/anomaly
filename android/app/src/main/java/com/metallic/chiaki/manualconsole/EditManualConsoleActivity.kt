@@ -11,6 +11,11 @@ import android.widget.ArrayAdapter
 import com.metallic.chiaki.common.ThemedActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.SocketTimeoutException
 import com.metallic.chiaki.R
 import com.metallic.chiaki.common.RegisteredHost
 import com.metallic.chiaki.common.ext.RevealActivity
@@ -71,6 +76,41 @@ class EditManualConsoleActivity: ThemedActivity(), RevealActivity
 		})
 
 		binding.saveButton.setOnClickListener { saveHost() }
+		binding.testConnectionButton.setOnClickListener { testConnection() }
+	}
+
+	private fun testConnection()
+	{
+		val host = binding.hostEditText.text.toString().trim()
+			.removePrefix("http://")
+			.removePrefix("https://")
+			.trimEnd('/')
+		if(host.isEmpty())
+		{
+			binding.hostEditText.error = getString(R.string.entered_host_invalid)
+			return
+		}
+
+		binding.testConnectionButton.isEnabled = false
+		binding.testResultTextView.setText(R.string.test_connection_testing)
+
+		lifecycleScope.launch {
+			val message = withContext(Dispatchers.IO) {
+				try {
+					val probe = RemotePlayProbe.probe(host)
+					val name = probe.hostName?.takeIf { it.isNotEmpty() }
+						?: probe.hostType?.takeIf { it.isNotEmpty() }
+						?: host
+					getString(R.string.test_connection_success, name, probe.roundTripMs)
+				} catch(e: SocketTimeoutException) {
+					getString(R.string.test_connection_timeout)
+				} catch(e: Exception) {
+					getString(R.string.test_connection_failed, e.message ?: e.javaClass.simpleName)
+				}
+			}
+			binding.testConnectionButton.isEnabled = true
+			binding.testResultTextView.text = message
+		}
 	}
 
 	private fun titleForRegisteredHost(registeredHost: RegisteredHost?) =
