@@ -49,6 +49,18 @@
             app:summary="@string/preferences_about_summary"
             app:icon="@drawable/ic_console_simple" />
 
+        <Preference
+            app:key="check_updates"
+            app:title="@string/preferences_check_updates_title"
+            app:summary="@string/preferences_check_updates_summary"
+            app:icon="@drawable/ic_log" />
+
+        <SwitchPreference
+            app:key="@string/update_auto_check_key"
+            app:title="@string/preferences_auto_update_check_title"
+            app:summary="@string/preferences_auto_update_check_summary"
+            app:icon="@drawable/ic_log" />
+
         <SwitchPreference
             app:key="@string/preferences_rumble_enabled_key"
             app:title="@string/preferences_rumble_enabled_title"

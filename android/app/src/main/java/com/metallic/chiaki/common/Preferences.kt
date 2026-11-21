@@ -127,6 +127,16 @@ class Preferences(context: Context)
 		get() = sharedPreferences.getBoolean(autoLandscapeKey, true)
 		set(value) { sharedPreferences.edit().putBoolean(autoLandscapeKey, value).apply() }
 
+	val autoUpdateCheckKey get() = resources.getString(R.string.update_auto_check_key)
+	var autoUpdateCheck
+		get() = sharedPreferences.getBoolean(autoUpdateCheckKey, true)
+		set(value) { sharedPreferences.edit().putBoolean(autoUpdateCheckKey, value).apply() }
+
+	private val lastUpdateCheckKey = "last_update_check"
+	var lastUpdateCheck
+		get() = sharedPreferences.getLong(lastUpdateCheckKey, 0L)
+		set(value) { sharedPreferences.edit().putLong(lastUpdateCheckKey, value).apply() }
+
 	val touchpadOnlyEnabledKey get() = resources.getString(R.string.preferences_touchpad_only_enabled_key)
 	var touchpadOnlyEnabled
 		get() = sharedPreferences.getBoolean(touchpadOnlyEnabledKey, false)

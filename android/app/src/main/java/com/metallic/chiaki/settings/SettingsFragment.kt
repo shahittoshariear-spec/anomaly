@@ -15,6 +15,7 @@ import com.metallic.chiaki.R
 import com.metallic.chiaki.common.Preferences
 import com.metallic.chiaki.common.ext.viewModelFactory
 import com.metallic.chiaki.common.getDatabase
+import com.metallic.chiaki.update.UpdateDialogs
 
 class DataStore(val preferences: Preferences): PreferenceDataStore()
 {
@@ -26,6 +27,7 @@ class DataStore(val preferences: Preferences): PreferenceDataStore()
 		preferences.motionEnabledKey -> preferences.motionEnabled
 		preferences.buttonHapticEnabledKey -> preferences.buttonHapticEnabled
 		preferences.fullscreenKey -> preferences.fullscreen
+		preferences.autoUpdateCheckKey -> preferences.autoUpdateCheck
 		else -> defValue
 	}
 
@@ -39,6 +41,7 @@ class DataStore(val preferences: Preferences): PreferenceDataStore()
 			preferences.motionEnabledKey -> preferences.motionEnabled = value
 			preferences.buttonHapticEnabledKey -> preferences.buttonHapticEnabled = value
 			preferences.fullscreenKey -> preferences.fullscreen = value
+			preferences.autoUpdateCheckKey -> preferences.autoUpdateCheck = value
 		}
 	}
 
@@ -150,6 +153,11 @@ class SettingsFragment: PreferenceFragmentCompat(), TitleFragment
 
 		preferenceScreen.findPreference<Preference>("preview_animation")?.setOnPreferenceClickListener {
 			startActivity(Intent(requireContext(), LaunchPreviewActivity::class.java))
+			true
+		}
+
+		preferenceScreen.findPreference<Preference>("check_updates")?.setOnPreferenceClickListener {
+			UpdateDialogs.check(requireActivity(), silent = false)
 			true
 		}
 

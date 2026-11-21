@@ -32,6 +32,7 @@ import com.metallic.chiaki.manualconsole.EditManualConsoleActivity
 import com.metallic.chiaki.regist.RegistActivity
 import com.metallic.chiaki.settings.SettingsActivity
 import com.metallic.chiaki.stream.StreamActivity
+import com.metallic.chiaki.update.UpdateDialogs
 
 class MainActivity : ThemedActivity()
 {
@@ -77,6 +78,12 @@ class MainActivity : ThemedActivity()
 		val recyclerViewAdapter = DisplayHostRecyclerViewAdapter(this::hostTriggered, this::wakeupHost, this::editHost, this::deleteHost, this::renameHost)
 		binding.hostsRecyclerView.adapter = recyclerViewAdapter
 		binding.hostsRecyclerView.layoutManager = LinearLayoutManager(this)
+		binding.hostsRecyclerView.itemAnimator = androidx.recyclerview.widget.DefaultItemAnimator().apply {
+			addDuration = 220
+			changeDuration = 180
+			moveDuration = 220
+			removeDuration = 180
+		}
 		viewModel.displayHosts.observe(this, Observer {
 			val top = binding.hostsRecyclerView.computeVerticalScrollOffset() == 0
 			recyclerViewAdapter.hosts = it
@@ -89,6 +96,20 @@ class MainActivity : ThemedActivity()
 			discoveryMenuItem?.let { updateDiscoveryMenuItem(it, active) }
 			updateEmptyInfo()
 		})
+
+		maybeCheckForUpdates()
+	}
+
+	private fun maybeCheckForUpdates()
+	{
+		val preferences = Preferences(this)
+		if(!preferences.autoUpdateCheck)
+			return
+		val oneDay = 24 * 60 * 60 * 1000L
+		if(System.currentTimeMillis() - preferences.lastUpdateCheck < oneDay)
+			return
+		preferences.lastUpdateCheck = System.currentTimeMillis()
+		UpdateDialogs.check(this, silent = true)
 	}
 
 	private fun updateEmptyInfo()
