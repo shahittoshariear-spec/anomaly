@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager
 import com.metallic.chiaki.R
 import com.metallic.chiaki.lib.Codec
 import com.metallic.chiaki.lib.ConnectVideoProfile
+import com.metallic.chiaki.lib.ControllerState
 import com.metallic.chiaki.lib.VideoFPSPreset
 import com.metallic.chiaki.lib.VideoResolutionPreset
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -77,6 +78,36 @@ class Preferences(context: Context)
 		{
 			val all = values()
 			fun fromValue(value: String?) = all.firstOrNull { it.value == value } ?: ELECTRIC_VIOLET
+		}
+	}
+
+	/**
+	 * Controllers such as the EASYSMX M20 send their PS/Home/dock button as a regular
+	 * key event. Android reports it as BUTTON_MODE or BUTTON_C depending on the pad, so
+	 * both are routed through this mapping. `null` means the press is swallowed.
+	 */
+	enum class DockButton(val value: String, @StringRes val title: Int, val buttonMask: UInt?)
+	{
+		DEFAULT("default", R.string.dock_button_default, ControllerState.BUTTON_PS),
+		OPTIONS("options", R.string.dock_button_options, ControllerState.BUTTON_OPTIONS),
+		SHARE("share", R.string.dock_button_share, ControllerState.BUTTON_SHARE),
+		TOUCHPAD("touchpad", R.string.dock_button_touchpad, ControllerState.BUTTON_TOUCHPAD),
+		L3("l3", R.string.dock_button_l3, ControllerState.BUTTON_L3),
+		R3("r3", R.string.dock_button_r3, ControllerState.BUTTON_R3),
+		L2("l2", R.string.dock_button_l2, null),
+		R2("r2", R.string.dock_button_r2, null),
+		CROSS("cross", R.string.dock_button_cross, ControllerState.BUTTON_CROSS),
+		MOON("moon", R.string.dock_button_moon, ControllerState.BUTTON_MOON),
+		BOX("box", R.string.dock_button_box, ControllerState.BUTTON_BOX),
+		PYRAMID("pyramid", R.string.dock_button_pyramid, ControllerState.BUTTON_PYRAMID),
+		L1("l1", R.string.dock_button_l1, ControllerState.BUTTON_L1),
+		R1("r1", R.string.dock_button_r1, ControllerState.BUTTON_R1),
+		NONE("none", R.string.dock_button_none, null);
+
+		companion object
+		{
+			val all = values()
+			fun fromValue(value: String?) = all.firstOrNull { it.value == value } ?: DEFAULT
 		}
 	}
 
@@ -166,6 +197,11 @@ class Preferences(context: Context)
 	var swapCrossMoon
 		get() = sharedPreferences.getBoolean(swapCrossMoonKey, false)
 		set(value) { sharedPreferences.edit().putBoolean(swapCrossMoonKey, value).apply() }
+
+	val dockButtonKey get() = resources.getString(R.string.preferences_dock_button_key)
+	var dockButton: DockButton
+		get() = DockButton.fromValue(sharedPreferences.getString(dockButtonKey, null))
+		set(value) { sharedPreferences.edit().putString(dockButtonKey, value.value).apply() }
 
 	val resolutionKey get() = resources.getString(R.string.preferences_resolution_key)
 	var resolution

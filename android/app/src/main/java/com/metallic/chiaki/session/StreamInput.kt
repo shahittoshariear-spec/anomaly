@@ -9,6 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.metallic.chiaki.common.Preferences
 import com.metallic.chiaki.lib.ControllerState
+import kotlin.math.abs
 
 class StreamInput(val context: Context, val preferences: Preferences)
 {
@@ -20,9 +21,41 @@ class StreamInput(val context: Context, val preferences: Preferences)
 	}
 	var controllerStateChangedCallback: ((ControllerState) -> Unit)? = null
 
+	// Reused so that every input event does not allocate a new ControllerState (plus a
+	// touch array and two intermediate states from the `or` operator). Input events can
+	// arrive at 125-250 Hz; the garbage that produced was the main source of GC jitter
+	// on the input path. The receiver (JNI) copies the state synchronously.
+	private val combinedControllerState = ControllerState()
+
 	val controllerState: ControllerState get()
 	{
-		val controllerState = sensorControllerState or keyControllerState or motionControllerState
+		val controllerState = combinedControllerState
+		val touchState = touchControllerState
+
+		controllerState.buttons = sensorControllerState.buttons or keyControllerState.buttons or
+				motionControllerState.buttons or touchState.buttons
+		controllerState.l2State = maxOf3(sensorControllerState.l2State, keyControllerState.l2State, motionControllerState.l2State)
+		controllerState.r2State = maxOf3(sensorControllerState.r2State, keyControllerState.r2State, motionControllerState.r2State)
+		controllerState.leftX = maxAbs(sensorControllerState.leftX, keyControllerState.leftX, motionControllerState.leftX)
+		controllerState.leftY = maxAbs(sensorControllerState.leftY, keyControllerState.leftY, motionControllerState.leftY)
+		controllerState.rightX = maxAbs(sensorControllerState.rightX, keyControllerState.rightX, motionControllerState.rightX)
+		controllerState.rightY = maxAbs(sensorControllerState.rightY, keyControllerState.rightY, motionControllerState.rightY)
+
+		// Touches only ever come from the touch controller state (the other sources
+		// leave id at -1), so copying the references is equivalent to the old `or`.
+		controllerState.touches[0] = touchState.touches[0]
+		controllerState.touches[1] = touchState.touches[1]
+
+		controllerState.gyroX = sensorControllerState.gyroX
+		controllerState.gyroY = sensorControllerState.gyroY
+		controllerState.gyroZ = sensorControllerState.gyroZ
+		controllerState.accelX = sensorControllerState.accelX
+		controllerState.accelY = sensorControllerState.accelY
+		controllerState.accelZ = sensorControllerState.accelZ
+		controllerState.orientX = sensorControllerState.orientX
+		controllerState.orientY = sensorControllerState.orientY
+		controllerState.orientZ = sensorControllerState.orientZ
+		controllerState.orientW = sensorControllerState.orientW
 
 		// Rotation only affects the motion sensor values. Skip the per-event
 		// getSystemService/display lookups for the common gamepad-only case.
@@ -51,7 +84,16 @@ class StreamInput(val context: Context, val preferences: Preferences)
 		if(motionControllerState.r2State > 0U)
 			controllerState.r2State = motionControllerState.r2State
 
-		return controllerState or touchControllerState
+		return controllerState
+	}
+
+	private fun maxAbs(a: Short, b: Short) = if(abs(a.toInt()) > abs(b.toInt())) a else b
+	private fun maxAbs(a: Short, b: Short, c: Short) = maxAbs(maxAbs(a, b), c)
+	private fun maxOf3(a: UByte, b: UByte, c: UByte) = when
+	{
+		a >= b && a >= c -> a
+		b >= c -> b
+		else -> c
 	}
 
 	private val sensorControllerState = ControllerState() // from Motion Sensors
@@ -66,6 +108,7 @@ class StreamInput(val context: Context, val preferences: Preferences)
 
 	private val swapCrossMoon = preferences.swapCrossMoon
 	private val motionEnabled = preferences.motionEnabled
+	private val dockButton = preferences.dockButton
 
 	private val sensorEventListener = object: SensorEventListener {
 		override fun onSensorChanged(event: SensorEvent)
@@ -150,6 +193,33 @@ class StreamInput(val context: Context, val preferences: Preferences)
 			}
 		}
 
+		// PS/Home/dock buttons arrive as BUTTON_MODE on most pads and as BUTTON_C on
+		// some (EASYSMX M20 among them). HOME/ASSIST cover pads that emulate the
+		// system keys instead. Route all of them through the user's mapping.
+		if(event.keyCode == KeyEvent.KEYCODE_BUTTON_C ||
+			event.keyCode == KeyEvent.KEYCODE_BUTTON_MODE ||
+			event.keyCode == KeyEvent.KEYCODE_HOME ||
+			event.keyCode == KeyEvent.KEYCODE_ASSIST)
+		{
+			val pressed = event.action == KeyEvent.ACTION_DOWN
+			when(dockButton)
+			{
+				Preferences.DockButton.L2 -> keyControllerState.l2State = if(pressed) UByte.MAX_VALUE else 0U
+				Preferences.DockButton.R2 -> keyControllerState.r2State = if(pressed) UByte.MAX_VALUE else 0U
+				else -> {
+					val buttonMask = dockButton.buttonMask ?: return true // "Do nothing"
+					keyControllerState.buttons = when(event.action)
+					{
+						KeyEvent.ACTION_DOWN -> keyControllerState.buttons or buttonMask
+						KeyEvent.ACTION_UP -> keyControllerState.buttons and buttonMask.inv()
+						else -> keyControllerState.buttons
+					}
+				}
+			}
+			controllerStateUpdated()
+			return true
+		}
+
 		val buttonMask: UInt = when(event.keyCode)
 		{
 			// dpad may arrive as either HAT axes or key events depending on the controller
@@ -167,8 +237,6 @@ class StreamInput(val context: Context, val preferences: Preferences)
 			KeyEvent.KEYCODE_BUTTON_THUMBR -> ControllerState.BUTTON_R3
 			KeyEvent.KEYCODE_BUTTON_SELECT -> ControllerState.BUTTON_SHARE
 			KeyEvent.KEYCODE_BUTTON_START -> ControllerState.BUTTON_OPTIONS
-			KeyEvent.KEYCODE_BUTTON_C -> ControllerState.BUTTON_PS
-			KeyEvent.KEYCODE_BUTTON_MODE -> ControllerState.BUTTON_PS
 			else -> return false
 		}
 

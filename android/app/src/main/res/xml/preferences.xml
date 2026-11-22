@@ -25,6 +25,12 @@
             app:summary="@string/preferences_swap_cross_moon_summary"
             app:icon="@drawable/ic_gamepad" />
 
+        <ListPreference
+            app:key="@string/preferences_dock_button_key"
+            app:title="@string/preferences_dock_button_title"
+            app:summary="%s"
+            app:icon="@drawable/ic_gamepad" />
+
         <Preference
             app:key="controller_test"
             app:title="@string/preferences_controller_test_title"

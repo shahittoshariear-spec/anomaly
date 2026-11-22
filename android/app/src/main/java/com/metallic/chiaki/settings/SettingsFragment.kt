@@ -53,6 +53,7 @@ class DataStore(val preferences: Preferences): PreferenceDataStore()
 		preferences.codecKey -> preferences.codec.value
 		preferences.virtualControlsModeKey -> preferences.virtualControlsMode.value
 		preferences.themeKey -> preferences.theme.value
+		preferences.dockButtonKey -> preferences.dockButton.value
 		else -> defValue
 	}
 
@@ -80,6 +81,8 @@ class DataStore(val preferences: Preferences): PreferenceDataStore()
 				preferences.virtualControlsMode = Preferences.VirtualControlsMode.fromValue(value)
 			preferences.themeKey ->
 				preferences.theme = Preferences.Theme.fromValue(value)
+			preferences.dockButtonKey ->
+				preferences.dockButton = Preferences.DockButton.fromValue(value)
 		}
 	}
 }
@@ -131,6 +134,11 @@ class SettingsFragment: PreferenceFragmentCompat(), TitleFragment
 		preferenceScreen.findPreference<ListPreference>(getString(R.string.preferences_virtual_controls_mode_key))?.let {
 			it.entryValues = Preferences.VirtualControlsMode.all.map { mode -> mode.value }.toTypedArray()
 			it.entries = Preferences.VirtualControlsMode.all.map { mode -> getString(mode.title) }.toTypedArray()
+		}
+
+		preferenceScreen.findPreference<ListPreference>(getString(R.string.preferences_dock_button_key))?.let {
+			it.entryValues = Preferences.DockButton.all.map { button -> button.value }.toTypedArray()
+			it.entries = Preferences.DockButton.all.map { button -> getString(button.title) }.toTypedArray()
 		}
 
 		preferenceScreen.findPreference<Preference>("theme_picker")?.let {
